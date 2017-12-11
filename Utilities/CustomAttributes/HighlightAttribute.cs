@@ -3,7 +3,9 @@
 using UnityEngine;
 
 /// <summary>
-/// 
+/// Highligh an atribute on the inspector
+/// Developed by LotteMakesStuff.
+/// Available @ https://gist.github.com/LotteMakesStuff/2d3c6dc7a913ed118601db95735574de
 /// </summary>
 public class HighlightAttribute : PropertyAttribute
 {

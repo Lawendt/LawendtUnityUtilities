@@ -37,18 +37,18 @@ Many modifications were made from the original script (available [here](http://w
 
 #### Scene History Widget
 Supports going backwards and forwards through your recent scene history, as well as a dropdown of all recently edited scenes. Also supports the back/forwards buttons on your mouse! Doesn't support multi-scene editing very well, though.
-Made by @jringrose
+Developed by @jringrose
 avaiable @ https://gist.github.com/jringrose
 Some modifications were made from the original.
 
 #### Inspector Read Only
 Use this InspectorReadOnly attribute for public fields that you want to easily inspect in the editor without allowing modifications. InspectorReadOnlyDrawer needs to be inside an Editor folder.
-Made by @jringrose
+Developed by @jringrose
 avaiable @ https://gist.github.com/jringrose
 
 #### AutoFind
 AutoFind attribute: automatically find the best component, will search in children if asked nicely, cycle through all found comp
-Made by @sandwich_cool
+Developed by @sandwich_cool
 avaiable @ https://twitter.com/sandwich_cool/status/815917262490234881
 
 #### Events Manager
@@ -57,11 +57,21 @@ Some modifications were made from the original.
 Original created by Ben D'Angelo. 
 Available @ https://gist.github.com/bendangelo/093edb33c2e844c5c73a
 
-#### Events Manager
-Interface of a event system using objects as message.
-Some modifications were made from the original.
-Original created by Ben D'Angelo. 
-Available @ https://gist.github.com/bendangelo/093edb33c2e844c5c73a
+#### Highlight Atribute
+Highligh an atribute on the inspector
+Developed by LotteMakesStuff.
+Available @ https://gist.github.com/LotteMakesStuff/2d3c6dc7a913ed118601db95735574de
+
+#### Edit Prefab
+Unity editor script for better editing of prefabs.
+Developed by ulrikdamm.
+Available @ https://gist.github.com/ulrikdamm/338392c3b0900de225ec6dd10864cab4
+
+#### Group Under Parent
+Adds a `ctrl + shift + g` command that groups the selected game objects inside a empty game object 
+Developed by Daniel Mullins.
+Available @ https://twitter.com/DMullinsGames/status/918903368201920514
+
 
 ## Others useful assets
 #### [Snap Anchors](https://assetstore.unity.com/packages/tools/gui/snap-anchors-69856)
@@ -74,6 +84,14 @@ Show button in the inspector.
 #### [Unity Size Explorer](https://github.com/aschearer/unitysizeexplorer)
 Graphic visualization of the build size of unity.
 
+#### [Prototype](https://github.com/inkle/prototype)
+Implementation of prototype pattern.
 
 
+
+#### Anotations
+
+These are some projects that I want to look into:
+
+https://heavens-vault-game.tumblr.com/post/162127808290/inline-scriptableobject-editing-in-unity
 
