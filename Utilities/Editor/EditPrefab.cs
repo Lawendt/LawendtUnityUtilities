@@ -2,12 +2,12 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
-/// <Summary>
+/// <summary>
 /// Adds a "Edit Prefab" option in the Assets menu (or right clicking an asset in the project browser).
 /// This opens an empty scene with your prefab where you can edit it.
 /// Put this script in your project as Assets/Editor/EditPrefab.cs
 /// Developed by ulrikdamm.
-/// </Summary>
+/// </summary>
 
 public class EditPrefab {
 	static Object getPrefab(Object selection) {

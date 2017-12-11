@@ -72,6 +72,11 @@ Adds a `ctrl + shift + g` command that groups the selected game objects inside a
 Developed by Daniel Mullins.
 Available @ https://twitter.com/DMullinsGames/status/918903368201920514
 
+#### Reference finder
+Reference finder - Finds prefabs that reference an object in unity
+To use, stick this under a folder named "Editor", then right click an object/script in the project window and click "Find References"
+Developed by Dave Lloyd
+Available @ www.powerhoof.com
 
 ## Others useful assets
 #### [Snap Anchors](https://assetstore.unity.com/packages/tools/gui/snap-anchors-69856)

@@ -5,10 +5,10 @@ using UnityEngine;
 
 using UnityEditor;
 
-/// <Summary>
+/// <summary>
 /// Adds a `ctrl + shift + g` command that groups the selected game objects inside a empty game object 
 /// Developed by Daniel Mullins.
-/// </Summary>
+/// </summary>
 public class GroupUnderParent 
 {
 	private const string SHORTCUT_NAME = "Shortcuts/Group Under Parent %#g";
