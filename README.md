@@ -13,6 +13,9 @@ Uses an Fade Manager to manage the fade.
 #### Extended Parse
 Adds some new parses functions to string.
 
+#### Show If Property
+Property to only show field if the given conditions are meet.
+
 #### Extended Editor
 Adds a function that draws the script propriety.
 
@@ -24,6 +27,9 @@ Interface to control a pallete with shades.
 
 #### Auto Roll
 Automatic roll of a scroll rect.
+
+#### Force 2D Test
+Editor script to apply 2D forces on a rigidbodt to test something.
 
 #### Colorful Script
 Linearly changes the hue over time.
