@@ -79,6 +79,10 @@ Developed by Dave Lloyd
 Available @ www.powerhoof.com
 
 ## Others useful assets
+#### [UNInput: Universal Network Input](https://www.assetstore.unity3d.com/en/#!/content/92722)
+Input manager for console controllers and also for network connected controllers. You can control your game with your cellphone!
+And it's also made by me :)
+
 #### [Snap Anchors](https://assetstore.unity.com/packages/tools/gui/snap-anchors-69856)
 Snap anchors of the UI.
 
