@@ -12,6 +12,7 @@ using UnityEngine;
 /// </code>
 /// </example>
 /// </summary>
-public class InspectorReadOnly : PropertyAttribute {
+public class InspectorReadOnly : PropertyAttribute
+{
 
 }
