@@ -96,6 +96,9 @@ Snap anchors of the UI.
 #### [Easy Buttons](https://github.com/madsbangh/EasyButtons)
 Show button in the inspector.
 
+### [Signals] (https://github.com/yankooliveira/signals/tree/2e496652c82c2e366564b5527149d26b6f0f2d11)
+Signals impletation for a pub/sub message system.
+
 #### [Unity Size Explorer](https://github.com/aschearer/unitysizeexplorer)
 Graphic visualization of the build size of unity.
 
