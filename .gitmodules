@@ -1,6 +1,3 @@
 [submodule "EasyButtons"]
 	path = EasyButtons
 	url = git@github.com:Lawendt/EasyButtons.git
-[submodule "Events/signals"]
-	path = Events/signals
-	url = git@github.com:yankooliveira/signals.git
