@@ -34,6 +34,7 @@ Editor script to apply 2D forces on a rigidbodt to test something.
 #### Colorful Script
 Linearly changes the hue over time.
 
+
 ### Developed by others
 This are scripts that were NOT initially developed by me.
 
@@ -83,6 +84,11 @@ Reference finder - Finds prefabs that reference an object in unity
 To use, stick this under a folder named "Editor", then right click an object/script in the project window and click "Find References"
 Developed by Dave Lloyd
 Available @ www.powerhoof.com
+
+#### Custom Inspector Creator
+Editor extension that adds a tool to automagically generate boilerplate custom inspector code
+Developed by @LotteMakesStuff
+Available @ https://gist.github.com/LotteMakesStuff/cb63e4e25e5dfdda19a95380e9c03436
 
 ## Others useful assets
 #### [UNInput: Universal Network Input](https://www.assetstore.unity3d.com/en/#!/content/92722)
