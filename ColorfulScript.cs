@@ -11,7 +11,6 @@ public class ColorfulScript : MonoBehaviour
 {
     [AutoFind(typeof(Graphic), true)]
     public Graphic t;
-    private Color c = Color.white;
     public float secondsToAll;
     private float currentHue;
     private float currentSat;
@@ -20,7 +19,6 @@ public class ColorfulScript : MonoBehaviour
     public Color baseColor;
     void Start()
     {
-        c = baseColor;
         Color.RGBToHSV(baseColor, out currentHue, out currentSat, out currentValue);
     }
 
