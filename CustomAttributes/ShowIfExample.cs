@@ -9,15 +9,10 @@ public class ShowIfExample : MonoBehaviour
        Two = 2, Three = 3, Four = 4
     }
     public Dimension currentDimension;
-    [ShowIf("IsDimension", Dimension.Two)]
+    [ShowIf("currentDimension", Dimension.Two)]
     public Vector2 vector2;
-    [ShowIf("IsDimension", 3)]
+    [ShowIf("currentDimension", (Dimension)3)]
     public Vector3 vector3;
-    [ShowIf("IsDimension", Dimension.Four)]
+    [ShowIf("currentDimension", Dimension.Four)]
     public int x, y, z, w;
-
-    public bool IsDimension(Dimension value)
-    {
-        return value == currentDimension;
-    }
 }

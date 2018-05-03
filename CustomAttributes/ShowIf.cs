@@ -13,29 +13,32 @@ using UnityEngine;
 ///    Two = 2, Three = 3, Four = 4
 ///}
 ///public Dimension currentDimension;
-///[ShowIf("IsDimension", Dimension.Two)]
+///[ShowIf("currentDimension", Dimension.Two)]
 ///public Vector2 vector2;
-///[ShowIf("IsDimension", 3)]
+///[ShowIf("currentDimension", (Dimension)3)]
 ///public Vector3 vector3;
-///[ShowIf("IsDimension", Dimension.Four)]
+///[ShowIf("currentDimension", Dimension.Four)]
 ///public int x, y, z, w;
 ///
-///public bool IsDimension(Dimension value)
-///{
-///    return value == currentDimension;
-///}
 /// </code>
 /// </example>
 /// </summary>
 public class ShowIf : PropertyAttribute
 {
+    public enum ShowIfType
+    {
+        FieldEquals,
+        Method
+    }
+    public ShowIfType Type;
     public string ValidateMethod;
     public object Value;
 
-    public ShowIf(string validateMethod, object value = null)
+    public ShowIf(string validateMethod, object value = null, ShowIfType type = ShowIfType.FieldEquals)
     {
         this.ValidateMethod = validateMethod;
         this.Value = value;
+        this.Type = type;
     }
 
 }

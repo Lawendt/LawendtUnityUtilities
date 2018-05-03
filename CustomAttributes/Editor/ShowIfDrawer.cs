@@ -9,11 +9,8 @@ using System.Reflection;
 [CustomPropertyDrawer(typeof(ShowIf))]
 public class ShowIfDrawer : PropertyDrawer
 {
-    bool hideIt = true;
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
-        var hideAttribute = attribute as ShowIf;
-
         if (CheckIfShow(property))
         {
             EditorGUI.PropertyField(position, property, label);
@@ -33,15 +30,42 @@ public class ShowIfDrawer : PropertyDrawer
         if (!string.IsNullOrEmpty(hideAttribute.ValidateMethod))
         {
             var t = property.serializedObject.targetObject.GetType();
-            var m = t.GetMethod(hideAttribute.ValidateMethod, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-
-            if (m != null)
+            if (hideAttribute.Type == ShowIf.ShowIfType.Method)
             {
-                 return (bool)m.Invoke(property.serializedObject.targetObject, new[] { hideAttribute.Value });
+                var m = t.GetMethod(hideAttribute.ValidateMethod, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+
+                if (m != null)
+                {
+                    return (bool)m.Invoke(property.serializedObject.targetObject, new[] { hideAttribute.Value });
+                }
+                else
+                {
+                    Debug.LogError("Invalid Validate function: " + hideAttribute.ValidateMethod, property.serializedObject.targetObject);
+                }
             }
             else
             {
-                Debug.LogError("Invalid Validate function: " + hideAttribute.ValidateMethod, property.serializedObject.targetObject);
+                var f = t.GetField(hideAttribute.ValidateMethod, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+
+                if (f != null)
+                {
+                    if (hideAttribute.Value != null)
+                    {
+                        return f.GetValue(property.serializedObject.targetObject).Equals(hideAttribute.Value);
+                    }
+                    else
+                    {
+                        if (f.FieldType == typeof(bool))
+                            return f.GetValue(property.serializedObject.targetObject).Equals(true);
+                        else
+                            Debug.LogError(hideAttribute.ValidateMethod + " must be bool if no object is given. But is " + f.FieldType, property.serializedObject.targetObject);
+
+                    }
+                }
+                else
+                {
+                    Debug.LogError("Invalid field: " + hideAttribute.ValidateMethod, property.serializedObject.targetObject);
+                }
             }
         }
         return true;

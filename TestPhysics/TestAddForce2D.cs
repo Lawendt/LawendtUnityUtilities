@@ -21,12 +21,12 @@ public class TestAddForce2D : MonoBehaviour
     [Header("Setup")]
     public ForceMode2D forceMode = ForceMode2D.Force;
     public SetupType setupType;
-    [ShowIf("CheckType", SetupType.Vector)]
+    [ShowIf("setupType", SetupType.Vector)]
     public Vector3 force = Vector3.zero;
 
-    [ShowIf("CheckType", SetupType.AngleAndMagnitude)]
+    [ShowIf("setupType", SetupType.AngleAndMagnitude)]
     public float angle;
-    [ShowIf("CheckType", SetupType.AngleAndMagnitude)]
+    [ShowIf("setupType", SetupType.AngleAndMagnitude)]
     public float magnitude;
 
     [EasyButtons.Button(EasyButtons.ButtonMode.EnabledInPlayMode)]
