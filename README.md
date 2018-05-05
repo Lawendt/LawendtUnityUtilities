@@ -14,7 +14,11 @@ Uses an Fade Manager to manage the fade.
 Adds some new parses functions to string.
 
 #### Show If Property
-Property to only show field if the given conditions are meet.
+Property to only show field if the given conditions are meet. 
+Conditions can be: 
+* if inputed field is true
+* if inputed field is equal to input value
+* if inputed method returns true
 
 #### Extended Editor
 Adds a function that draws the script propriety.
@@ -102,7 +106,7 @@ Snap anchors of the UI.
 #### [Easy Buttons](https://github.com/madsbangh/EasyButtons)
 Show button in the inspector.
 
-### [Signals] (https://github.com/yankooliveira/signals/tree/2e496652c82c2e366564b5527149d26b6f0f2d11)
+### [Signals](https://github.com/yankooliveira/signals/tree/2e496652c82c2e366564b5527149d26b6f0f2d11)
 Signals impletation for a pub/sub message system.
 
 #### [Unity Size Explorer](https://github.com/aschearer/unitysizeexplorer)
