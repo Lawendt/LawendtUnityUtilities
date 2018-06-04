@@ -1,25 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using System;
 
-public class SelectableExtender : MonoBehaviour, ISelectHandler, IDeselectHandler
+namespace LUT.Snippets
 {
-
-    public UnityEvent onSelect = new UnityEvent();
-    public UnityEvent onDeselect = new UnityEvent();
-
-    public void OnDeselect(BaseEventData eventData)
+    public class SelectableExtender : MonoBehaviour, ISelectHandler, IDeselectHandler
     {
-        onDeselect.Invoke();
-    }
 
-    public void OnSelect(BaseEventData eventData)
-    {
-        onSelect.Invoke();
-    }
+        public UnityEvent onSelect = new UnityEvent();
+        public UnityEvent onDeselect = new UnityEvent();
 
+        public void OnDeselect(BaseEventData eventData)
+        {
+            onDeselect.Invoke();
+        }
+
+        public void OnSelect(BaseEventData eventData)
+        {
+            onSelect.Invoke();
+        }
+
+    }
 }

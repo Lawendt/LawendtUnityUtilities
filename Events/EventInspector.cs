@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
-namespace LUT
+namespace LUT.Event
 {
 
     public class EventInspector : MonoBehaviour

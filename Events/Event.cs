@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace LUT
+namespace LUT.Event
 {
     /// <summary>
     /// Serialized event

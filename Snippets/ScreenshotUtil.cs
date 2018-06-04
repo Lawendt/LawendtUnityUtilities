@@ -1,28 +1,31 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class ScreenshotUtil : Singleton<ScreenshotUtil>
+namespace LUT.Snippets
 {
-    [SerializeField]
-    private int _screenshotNumber;
-    public KeyCode keyCode = KeyCode.P;
-    // Update is called once per frame
-    void Update()
+
+    public class ScreenshotUtil : Singleton<ScreenshotUtil>
     {
-        if (Input.GetKeyDown(keyCode))
+        [SerializeField]
+        private int _screenshotNumber;
+        [SearchableEnum.SearchableEnum]
+        public KeyCode keyCode = KeyCode.P;
+        // Update is called once per frame
+        void Update()
         {
-            Capture();
+            if (Input.GetKeyDown(keyCode))
+            {
+                Capture();
+            }
         }
-    }
 
-    [EasyButtons.Button()]
-    void Capture()
-    {
-        string path = Application.persistentDataPath + "/screenshot_" + _screenshotNumber + ".png";
-        ScreenCapture.CaptureScreenshot(path);
-        Debug.Log("screenshot was taken and saved to " + path);
-        _screenshotNumber++;
+        [EasyButtons.Button()]
+        void Capture()
+        {
+            string path = Application.persistentDataPath + "/screenshot_" + _screenshotNumber + ".png";
+            ScreenCapture.CaptureScreenshot(path);
+            Debug.Log("screenshot was taken and saved to " + path);
+            _screenshotNumber++;
 
+        }
     }
 }
