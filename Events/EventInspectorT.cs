@@ -3,23 +3,23 @@ using UnityEngine.Events;
 
 namespace LUT.Event
 {
-
-    public class EventInspector : MonoBehaviour
+    public class EventInspector<T, EventObjectType,UnityEventType> : MonoBehaviour where UnityEventType : UnityEvent<T> where EventObjectType : EventObject<T>
     {
+
         [SerializeField]
-        private EventObject _targetEvent;
+        private EventObjectType _targetEvent;
 #if UNITY_EDITOR
-        private EventObject _cacheEvent;
+        private EventObjectType _cacheEvent;
 #endif
         [SerializeField]
-        private UnityEvent _onInvoke;
+        private UnityEventType _onInvoke;
 
 #if UNITY_EDITOR
         private void OnValidate()
         {
             if (_cacheEvent != null && Application.isPlaying)
             {
-                _cacheEvent.Unregister(_onInvoke.Invoke);
+                _cacheEvent.Unregister(Invoke);
             }
             _cacheEvent = _targetEvent;
         }
@@ -27,7 +27,6 @@ namespace LUT.Event
 
         public void Reset()
         {
-            _onInvoke = new UnityEvent();
             _targetEvent = null;
         }
         public void OnEnable()
@@ -41,12 +40,17 @@ namespace LUT.Event
 #if UNITY_EDITOR
             _cacheEvent = _targetEvent;
 #endif
-            _targetEvent.Register(_onInvoke.Invoke);
+            _targetEvent.Register(Invoke);
         }
 
         public void OnDisable()
         {
-            _targetEvent.Unregister(_onInvoke.Invoke);
+            _targetEvent.Unregister(Invoke);
+        }
+
+        private void Invoke(T t)
+        {
+            _onInvoke.Invoke(t);
         }
     }
 }

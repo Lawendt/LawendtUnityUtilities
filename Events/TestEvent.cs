@@ -6,7 +6,7 @@ namespace LUT.Event
 {
     public class TestEvent : MonoBehaviour
     {
-        public Event targetEvent;
+        public EventObject targetEvent;
 
         [EasyButtons.Button]
         public void Invoke()

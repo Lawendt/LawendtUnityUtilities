@@ -1,12 +1,13 @@
 using UnityEditor;
+using UnityEngine;
 
 namespace LUT.Event
 {
-    [CustomEditor(typeof(Event))]
+    [CustomEditor(typeof(EventObject))]
     //[CanEditMultipleObjects]
     public class EventInspector : Editor
     {
-        Event eTarget;
+        EventObject eTarget;
         void OnEnable()
         {
             // TODO: find properties we want to work with
@@ -15,7 +16,7 @@ namespace LUT.Event
 
         public override void OnInspectorGUI()
         {
-            eTarget = (Event)target;
+            eTarget = (EventObject)target;
             // Update the serializedProperty - always do this in the beginning of OnInspectorGUI.
             serializedObject.Update();
 
@@ -24,6 +25,11 @@ namespace LUT.Event
 
             // TODO: Draw UI here
             EditorGUILayout.HelpBox("There are currently " + eTarget.Count + " listeners registered.", MessageType.Info);
+
+            if(GUILayout.Button("Trigger event"))
+            {
+                eTarget.Invoke();
+            }
 
             //var _objAction = typeof(Event).GetField("actions", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(eTarget);
 
