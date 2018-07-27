@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 /// <summary>
@@ -23,12 +22,14 @@ using UnityEngine;
 /// </code>
 /// </example>
 /// </summary>
+[System.AttributeUsage( System.AttributeTargets.Field, AllowMultiple = true)]
 public class ShowIf : PropertyAttribute
 {
     public enum ShowIfType
     {
         FieldEquals,
-        Method
+        Method,
+        FieldNotEquals
     }
     public ShowIfType Type;
     public string ValidateMethod;

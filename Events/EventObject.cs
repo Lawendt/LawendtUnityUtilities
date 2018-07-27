@@ -7,7 +7,7 @@ namespace LUT.Event
     /// <summary>
     /// Serialized event
     /// </summary>
-    [CreateAssetMenu(fileName = "Event", menuName = "Data/Event")]
+    [CreateAssetMenu(fileName = "Event", menuName = "Event/Default", order = 50)]
     public class EventObject : ScriptableObject
     {
         [SerializeField]

@@ -10,7 +10,7 @@ using System.IO;
 
 public static class CustomInspectorCreator
 {
-    [MenuItem("Assets/Create/Custom/Inspector", priority = 81)]
+    [MenuItem("Assets/Create/Custom/Inspector", priority = 83)]
     static void CreateInsptorEditorClass()
     {
         foreach (var script in Selection.objects)
@@ -21,7 +21,7 @@ public static class CustomInspectorCreator
         AssetDatabase.Refresh();
     }
 
-    [MenuItem("Assets/Create/Custom/Inspector", priority = 81, validate = true)]
+    [MenuItem("Assets/Create/Custom/Inspector", priority = 83, validate = true)]
     static bool ValidateCreateInsptorEditorClass()
     {
         foreach (var script in Selection.objects)

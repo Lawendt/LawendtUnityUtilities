@@ -12,9 +12,4 @@ public class AutoRotate3D : MonoBehaviour
     {
         transform.Rotate(torque * Time.deltaTime);
     }
-
-    //void FixedUpdate()
-    //{
-    //  transform.Rotate(torque);
-    //}
 }

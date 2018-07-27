@@ -51,12 +51,28 @@ public class ShowIfDrawer : PropertyDrawer
                 {
                     if (hideAttribute.Value != null)
                     {
-                        return f.GetValue(property.serializedObject.targetObject).Equals(hideAttribute.Value);
+                        if (hideAttribute.Type == ShowIf.ShowIfType.FieldNotEquals)
+                        {
+                            return !f.GetValue(property.serializedObject.targetObject).Equals(hideAttribute.Value);
+                        }
+                        else if (hideAttribute.Type == ShowIf.ShowIfType.FieldEquals)
+                        {
+                            return f.GetValue(property.serializedObject.targetObject).Equals(hideAttribute.Value);
+                        }
                     }
                     else
                     {
                         if (f.FieldType == typeof(bool))
-                            return f.GetValue(property.serializedObject.targetObject).Equals(true);
+                        {
+                            if (hideAttribute.Type == ShowIf.ShowIfType.FieldNotEquals)
+                            {
+                                return !f.GetValue(property.serializedObject.targetObject).Equals(true);
+                            }
+                            else if (hideAttribute.Type == ShowIf.ShowIfType.FieldEquals)
+                            {
+                                return f.GetValue(property.serializedObject.targetObject).Equals(true);
+                            }
+                        }
                         else
                             Debug.LogError(hideAttribute.ValidateMethod + " must be bool if no object is given. But is " + f.FieldType, property.serializedObject.targetObject);
 
