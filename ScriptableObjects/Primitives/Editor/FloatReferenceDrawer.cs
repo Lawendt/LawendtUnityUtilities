@@ -1,5 +1,5 @@
 ﻿// ----------------------------------------------------------------------------
-// Unite 2017 - Game Architecture with Scriptable Objects
+// Original from Unite 2017 - Game Architecture with Scriptable Objects
 // 
 // Author: Ryan Hipple
 // Date:   10/04/17
@@ -8,7 +8,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace BabyOwl.Primitive
+namespace LUT.Primitive
 {
     [CustomPropertyDrawer(typeof(FloatReference))]
     public class FloatReferenceDrawer : PropertyDrawer

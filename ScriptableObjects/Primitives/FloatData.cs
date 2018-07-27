@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace BabyOwl.Primitive
+namespace LUT.Primitive
 {
     [CreateAssetMenu(fileName = "FloatData", menuName = "Data/Primitive/Float", order = -10)]
     public sealed class FloatData : ScriptableObject

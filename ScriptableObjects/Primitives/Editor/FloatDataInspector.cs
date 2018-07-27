@@ -3,7 +3,7 @@ using UnityEditor;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace BabyOwl.Primitive
+namespace LUT.Primitive
 {
     [CustomEditor(typeof(FloatData))]
     //[CanEditMultipleObjects]

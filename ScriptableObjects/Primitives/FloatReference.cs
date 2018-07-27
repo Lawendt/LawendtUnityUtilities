@@ -1,5 +1,5 @@
 ﻿// ----------------------------------------------------------------------------
-// Unite 2017 - Game Architecture with Scriptable Objects
+// Original from Unite 2017 - Game Architecture with Scriptable Objects
 // 
 // Author: Ryan Hipple
 // Date:   10/04/17
@@ -7,7 +7,7 @@
 
 using System;
 
-namespace BabyOwl.Primitive
+namespace LUT.Primitive
 {
     [Serializable]
     public class FloatReference
