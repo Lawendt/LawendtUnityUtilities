@@ -13,7 +13,7 @@ public class EditPrefab {
 	static Object getPrefab(Object selection) {
 		var prefabType = PrefabUtility.GetPrefabType(selection);
 		if (prefabType == PrefabType.PrefabInstance) {
-			var prefab = PrefabUtility.GetPrefabParent(selection);
+			var prefab = PrefabUtility.GetCorrespondingObjectFromSource(selection);
 			return prefab;
 		}
 		
@@ -62,7 +62,7 @@ public sealed class ReturnToSceneGUI {
 		GUI.Box(rect, GUIContent.none);
 		
 		if (GUILayout.Button("Apply and return", new GUILayoutOption[0])) {
-			PrefabUtility.ReplacePrefab(prefabInstance, PrefabUtility.GetPrefabParent(prefabInstance), ReplacePrefabOptions.ConnectToPrefab);
+			PrefabUtility.ReplacePrefab(prefabInstance, PrefabUtility.GetCorrespondingObjectFromSource(prefabInstance), ReplacePrefabOptions.ConnectToPrefab);
 			SceneView.onSceneGUIDelegate -= RenderSceneGUI;
 			EditorSceneManager.OpenScene(previousScene);
 		}

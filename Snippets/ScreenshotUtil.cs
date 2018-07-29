@@ -9,7 +9,13 @@ namespace LUT.Snippets
         private int _screenshotNumber;
         [SearchableEnum.SearchableEnum]
         public KeyCode keyCode = KeyCode.P;
-        // Update is called once per frame
+
+        [Header("Path")]
+        [SerializeField]
+        [ContextMenuItem("OpenPath", "OpenPath")]
+        private string _path = "screenshot_";
+        [SerializeField]
+        private bool _usePersistentDataPath = false;
         void Update()
         {
             if (Input.GetKeyDown(keyCode))
@@ -19,13 +25,27 @@ namespace LUT.Snippets
         }
 
         [EasyButtons.Button()]
-        void Capture()
+        [ContextMenu("Capture")]
+        public void Capture()
         {
-            string path = Application.persistentDataPath + "/screenshot_" + _screenshotNumber + ".png";
+            string path = "";
+            GetPath(out path);
+
             ScreenCapture.CaptureScreenshot(path);
             Debug.Log("screenshot was taken and saved to " + path);
             _screenshotNumber++;
 
+        }
+
+
+        public void GetPath(out string path)
+        {
+            path = "";
+            if (_usePersistentDataPath)
+            {
+                path = Application.persistentDataPath + "/";
+            }
+            path += _path + _screenshotNumber + ".png";
         }
     }
 }
