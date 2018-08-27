@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace LUT.Event
+namespace LUT.Events
 {
     /// <summary>
     /// Serialized event that receives a Transform component as parameter
