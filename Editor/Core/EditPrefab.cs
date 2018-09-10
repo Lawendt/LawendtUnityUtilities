@@ -19,7 +19,11 @@ namespace LUT
             var prefabType = PrefabUtility.GetPrefabType(selection);
             if (prefabType == PrefabType.PrefabInstance)
             {
-                var prefab = PrefabUtility.GetCorrespondingObjectFromSource(selection);
+#if UNITY_2018_2_OR_NEWER
+                var prefab = PrefabUtility.GetCorrespondingObjectFromSource(selection);                
+#elif UNITY_2018_1
+                var prefab = PrefabUtility.GetPrefabParent(selection);
+#endif
                 return prefab;
             }
 
@@ -74,7 +78,11 @@ namespace LUT
 
             if (GUILayout.Button("Apply and return", new GUILayoutOption[0]))
             {
+#if UNITY_2018_2_OR_NEWER
                 PrefabUtility.ReplacePrefab(prefabInstance, PrefabUtility.GetCorrespondingObjectFromSource(prefabInstance), ReplacePrefabOptions.ConnectToPrefab);
+#elif UNITY_2018_1
+                PrefabUtility.ReplacePrefab(prefabInstance, PrefabUtility.GetPrefabParent(prefabInstance), ReplacePrefabOptions.ConnectToPrefab);
+#endif
                 SceneView.onSceneGUIDelegate -= RenderSceneGUI;
                 EditorSceneManager.OpenScene(previousScene);
             }
