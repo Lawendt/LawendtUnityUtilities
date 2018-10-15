@@ -1,35 +1,24 @@
-using UnityEngine;
 using UnityEditor;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace LUT.Primitive
 {
-    [CustomEditor(typeof(FloatData))]
-    //[CanEditMultipleObjects]
-    public class FloatDataInspector : Editor
-    {
+	[CustomEditor(typeof(FloatData))]
+	public class FloatDataInspector : Editor
+	{
+		SerializedProperty _value;
 
-        void OnEnable()
-        {
-            // TODO: find properties we want to work with
-            //serializedObject.FindProperty();
-        }
+		void OnEnable()
+		{
+			_value = serializedObject.FindProperty("_value");
+		}
 
-        public override void OnInspectorGUI()
-        {
-            // Update the serializedProperty - always do this in the beginning of OnInspectorGUI.
-            serializedObject.Update();
+		public override void OnInspectorGUI()
+		{
+			serializedObject.Update();
 
-            SerializedProperty _lock = serializedObject.FindProperty("_lock");
-            SerializedProperty _value = serializedObject.FindProperty("_value");
+			EditorGUILayout.PropertyField(_value);
 
-            EditorGUI.BeginDisabledGroup(_lock.boolValue);
-            EditorGUILayout.PropertyField(_value);
-            EditorGUI.EndDisabledGroup();
-
-            // Apply changes to the serializedProperty - always do this in the end of OnInspectorGUI.
-            serializedObject.ApplyModifiedProperties();
-        }
-    }
+			serializedObject.ApplyModifiedProperties();
+		}
+	}
 }
