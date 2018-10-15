@@ -7,3 +7,6 @@ I began to realize that I was using the same scripts in many projects and wanted
 ## What?
 There are a lot of scripts here, [attributes](https://github.com/Lawendt/UnityLawUtilities/tree/master/CustomAttributes), [editor extensions](https://github.com/Lawendt/UnityLawUtilities/tree/master/Editor), [snippets](https://github.com/Lawendt/UnityLawUtilities/tree/master/Snippets) of usefull code etc. You can check a list of (almost) all of them at the [wiki](https://github.com/Lawendt/UnityLawUtilities/wiki).
 
+## Namespace
+All scripts are located under `LUT` namespace (or at least should).
+
