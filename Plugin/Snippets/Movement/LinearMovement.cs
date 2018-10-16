@@ -14,9 +14,9 @@ namespace LUT.Snippets
 			direction = Vector3.forward;
 		}
 
-		private void Update()
+		private void FixedUpdate()
 		{
-			transform.position += GetTransformedDirection() * speed * Time.deltaTime;
+			transform.position += GetTransformedDirection() * speed * Time.fixedDeltaTime;
 		}
 
 		private Vector3 GetTransformedDirection()

@@ -1,22 +1,20 @@
 ﻿using UnityEditor;
 
-namespace EasyButtons
+namespace LUT
 {
-    /// <summary>
-    /// Custom inspector for Object including derived classes.
-    /// </summary>
-    [CanEditMultipleObjects]
-    [CustomEditor(typeof(UnityEngine.Object), true)]
-    public class ObjectEditor : Editor
-    {
-        public override void OnInspectorGUI()
-        {
+	/// <summary>
+	/// Custom inspector for Object including derived classes.
+	/// </summary>
+	[CanEditMultipleObjects]
+	[CustomEditor(typeof(UnityEngine.Object), true)]
+	public class ObjectEditor : Editor
+	{
+		public override void OnInspectorGUI()
+		{
 			// Draw the rest of the inspector as usual
-            DrawDefaultInspector();
-			
-            this.DrawEasyButtons();
+			DrawDefaultInspector();
 
-
-        }
-    }
+			this.DrawEasyButtons();
+		}
+	}
 }

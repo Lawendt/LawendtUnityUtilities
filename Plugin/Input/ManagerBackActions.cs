@@ -1,72 +1,91 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System;
+using UnityEngine;
 
-/// <summary>
-/// Hold a stack of actions. Can be used for managing actions that the player/user can undo.
-/// Developed by Lawendt. 
-/// Available @ https://github.com/Lawendt/UnityLawUtilities
-/// </summary>
-public class ManagerBackActions : Singleton<ManagerBackActions>
+namespace LUT
 {
-    public GameObject WarningCloseApp;
 
-    Stack<Action> stack;
-    public Action endAction;
+	/// <summary>
+	/// Hold a stack of actions. Can be used for managing actions that the player/user can undo.
+	/// Developed by Lawendt. 
+	/// Available @ https://github.com/Lawendt/UnityLawUtilities
+	/// </summary>
+	public class ManagerBackActions : Singleton<ManagerBackActions>
+	{
+		public GameObject WarningCloseApp;
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            act();
-        }
-    }
+		Stack<Action> stack;
+		public Action endAction;
 
-    public void removeStack()
-    {
-        if (stack == null)
-            restartStack();
+		private void Update()
+		{
+			if (Input.GetKeyDown(KeyCode.Escape))
+			{
+				Act();
+			}
+		}
 
-        if (stack.Count == 0)
-            return;
+		public void RemoveStack()
+		{
+			if (stack == null)
+			{
+				RestartStack();
+			}
 
-        stack.Pop();
-    }
-    public void addStack(Action action)
-    {
-        if (stack == null)
-            restartStack();
+			if (stack.Count == 0)
+			{
+				return;
+			}
 
-        stack.Push(action);
-    }
+			stack.Pop();
+		}
+		public void AddStack(Action action)
+		{
+			if (stack == null)
+			{
+				RestartStack();
+			}
 
-    public void act()
-    {
-        if (stack == null)
-            stack = new Stack<Action>();
+			stack.Push(action);
+		}
 
-        if (stack.Count == 0)
-        {
-            if (endAction != null)
-                endAction();
-            else
-                Application.Quit();
-            return;
-        }
+		public void Act()
+		{
+			if (stack == null)
+			{
+				stack = new Stack<Action>();
+			}
+
+			if (stack.Count == 0)
+			{
+				if (endAction != null)
+				{
+					endAction();
+				}
+				else
+				{
+					Application.Quit();
+				}
+
+				return;
+			}
 
 
-        Action action = stack.Pop();
-        action();
+			Action action = stack.Pop();
+			action();
 
-    }
+		}
 
-    public void restartStack()
-    {
-        if (stack == null)
-            stack = new Stack<Action>();
-        else
-            stack.Clear();
-    }
+		public void RestartStack()
+		{
+			if (stack == null)
+			{
+				stack = new Stack<Action>();
+			}
+			else
+			{
+				stack.Clear();
+			}
+		}
+	}
 }

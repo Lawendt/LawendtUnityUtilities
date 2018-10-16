@@ -1,9 +1,13 @@
 using UnityEngine;
 
-public sealed class SelfDestroy : MonoBehaviour
+namespace LUT
 {
-    public void Destroy()
-    {
-        Destroy(gameObject);
-    }
+
+	public sealed class SelfDestroy : MonoBehaviour
+	{
+		public void Destroy()
+		{
+			Destroy(gameObject);
+		}
+	}
 }

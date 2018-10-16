@@ -6,7 +6,7 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Homebrew
+namespace LUT
 {
 	[CustomEditor(typeof(Object), true, isFallback = true)]
 	[CanEditMultipleObjects]
@@ -30,11 +30,12 @@ namespace Homebrew
 
 
 			var c_on = Color.white;
-            
-			style = new GUIStyle(EditorStyles.foldout);
 
-			style.overflow = new RectOffset(-10, 0, 3, 0);
-			style.padding = new RectOffset(25, 0, -3, 0);
+			style = new GUIStyle(EditorStyles.foldout)
+			{
+				overflow = new RectOffset(-10, 0, 3, 0),
+				padding = new RectOffset(25, 0, -3, 0)
+			};
 
 			style.active.textColor = c_on;
 			style.active.background = uiTex_in;
@@ -44,44 +45,48 @@ namespace Homebrew
 			style.focused.textColor = c_on;
 			style.focused.background = uiTex_in;
 			style.onFocused.textColor = c_on;
-			style.onFocused.background = uiTex_in_on;	
-			
-		 
-			
+			style.onFocused.background = uiTex_in_on;
+
+
+
 		}
 
 		void OnEnable()
 		{
-  
+
 			bool pro = EditorGUIUtility.isProSkin;
 			if (!pro)
 			{
-				colors = new Colors();
-				colors.col0 = new Color(0.2f, 0.2f, 0.2f, 1f);
-				colors.col1 = new Color(1, 1, 1, 0.55f);
-				colors.col2 = new Color(0.7f, 0.7f, 0.7f, 1f);
+				colors = new Colors
+				{
+					col0 = new Color(0.2f, 0.2f, 0.2f, 1f),
+					col1 = new Color(1, 1, 1, 0.55f),
+					col2 = new Color(0.7f, 0.7f, 0.7f, 1f)
+				};
 			}
 			else
 			{
-				colors = new Colors();
-				colors.col0 = new Color(0.2f, 0.2f, 0.2f, 1f);
-				colors.col1 = new Color(1, 1, 1, 0.1f);
-				colors.col2 = new Color(0.25f, 0.25f, 0.25f, 1f);
+				colors = new Colors
+				{
+					col0 = new Color(0.2f, 0.2f, 0.2f, 1f),
+					col1 = new Color(1, 1, 1, 0.1f),
+					col2 = new Color(0.25f, 0.25f, 0.25f, 1f)
+				};
 			}
-			
+
 			var t = target.GetType();
 			var typeTree = t.GetTypeTree();
 			objectFields = target.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic |
-			                                          BindingFlags.Instance)
+													  BindingFlags.Instance)
 				.OrderByDescending(x => typeTree.IndexOf(x.DeclaringType)).ToList();
 
 
 			length = objectFields.Count;
-			
-			
+
+
 			Repaint();
 			initialized = false;
-		 
+
 		}
 
 		private void OnDisable()
@@ -111,7 +116,7 @@ namespace Homebrew
 						{
 							if (!cache.TryGetValue(prevFold.name, out c))
 							{
-								cache.Add(prevFold.name, new Cache {atr = prevFold, types = new HashSet<string> {objectFields[i].Name}});
+								cache.Add(prevFold.name, new Cache { atr = prevFold, types = new HashSet<string> { objectFields[i].Name } });
 							}
 							else
 							{
@@ -125,7 +130,7 @@ namespace Homebrew
 					prevFold = fold;
 					if (!cache.TryGetValue(fold.name, out c))
 					{
-						cache.Add(fold.name, new Cache {atr = fold, types = new HashSet<string> {objectFields[i].Name}});
+						cache.Add(fold.name, new Cache { atr = fold, types = new HashSet<string> { objectFields[i].Name } });
 					}
 					else
 					{
@@ -174,7 +179,7 @@ namespace Homebrew
 
 
 				pair.Value.expanded = EditorGUILayout.Foldout(pair.Value.expanded, pair.Value.atr.name, true,
-					style != null ? style : EditorStyles.foldout);
+					style ?? EditorStyles.foldout);
 
 
 				EditorGUILayout.EndVertical();
@@ -195,7 +200,9 @@ namespace Homebrew
 							EditorGUILayout.PropertyField(pair.Value.props[i],
 								new GUIContent(pair.Value.props[i].name.FirstLetterToUpperCase()), true);
 							if (i == pair.Value.props.Count - 1)
+							{
 								EditorGUILayout.Space();
+							}
 						}
 					}
 				}
@@ -268,7 +275,9 @@ namespace Homebrew
 		public static string FirstLetterToUpperCase(this string s)
 		{
 			if (string.IsNullOrEmpty(s))
+			{
 				return string.Empty;
+			}
 
 			char[] a = s.ToCharArray();
 			a[0] = char.ToUpper(a[0]);

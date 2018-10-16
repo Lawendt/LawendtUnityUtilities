@@ -18,297 +18,304 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace LUT
 {
-    /// <Summary>
-    /// Supports going backwards and forwards through your recent scene history, as well as a dropdown of all recently edited scenes. Also supports the back/forwards buttons on your mouse! Doesn't support multi-scene editing very well, though.
-    /// Developed by @jringrose
-    /// Avaiable @ https://gist.github.com/jringrose
-    /// Modified by Lawendt
-    /// </summary>
-    [InitializeOnLoad]
-    public class SceneHistoryWidget
-    {
+	/// <Summary>
+	/// Supports going backwards and forwards through your recent scene history, as well as a dropdown of all recently edited scenes. Also supports the back/forwards buttons on your mouse! Doesn't support multi-scene editing very well, though.
+	/// Developed by @jringrose
+	/// Avaiable @ https://gist.github.com/jringrose
+	/// Modified by Lawendt
+	/// </summary>
+	[InitializeOnLoad]
+	public class SceneHistoryWidget
+	{
 
-        private static bool workInGame = false;
+		private static bool workInGame = false;
 
-        private const int MAX_ITEMS = 10;
+		private const int MAX_ITEMS = 10;
 
-        private static bool showOnRight = false;
-        private static List<HistoryItem> sceneHistory;
-        private static string[] sceneHistoryNames;
-        private static int currentSceneIndex = 0;
-        private static string currentScenePath;
-        private static bool ignoreNextSceneChange = false;
+		private static bool showOnRight = false;
+		private static List<HistoryItem> sceneHistory;
+		private static string[] sceneHistoryNames;
+		private static int currentSceneIndex = 0;
+		private static string currentScenePath;
+		private static bool ignoreNextSceneChange = false;
 
-        static SceneHistoryWidget()
-        {
-            EditorApplication.update += Update;
-            SceneView.onSceneGUIDelegate += OnGUI;
+		static SceneHistoryWidget()
+		{
+			EditorApplication.update += Update;
+			SceneView.onSceneGUIDelegate += OnGUI;
 
-            sceneHistory = new List<HistoryItem>(MAX_ITEMS);
+			sceneHistory = new List<HistoryItem>(MAX_ITEMS);
 
-            var currentScene = SceneManager.GetActiveScene();
-            currentScenePath = currentScene.path;
+			var currentScene = SceneManager.GetActiveScene();
+			currentScenePath = currentScene.path;
 
-            LoadHistory();
+			LoadHistory();
 
-            if (sceneHistory.Count > currentSceneIndex && sceneHistory[currentSceneIndex].path == currentScenePath)
-            {
-                // history is still accurate, no need to refresh.
-            }
-            else
-            {
+			if (sceneHistory.Count > currentSceneIndex && sceneHistory[currentSceneIndex].path == currentScenePath)
+			{
+				// history is still accurate, no need to refresh.
+			}
+			else
+			{
 
-                AddHistoryItem(currentScene);
-            }
+				AddHistoryItem(currentScene);
+			}
 
-            if (EditorPrefs.HasKey(HistoryKey("showOnRight")))
-            {
-                showOnRight = EditorPrefs.GetBool(HistoryKey("showOnRight"));
-            }
-        }
+			if (EditorPrefs.HasKey(HistoryKey("showOnRight")))
+			{
+				showOnRight = EditorPrefs.GetBool(HistoryKey("showOnRight"));
+			}
+		}
 
-        private static void AddHistoryItem(Scene scene)
-        {
-            HistoryItem item = new HistoryItem
-            {
-                name = scene.name,
-                path = scene.path
-            };
+		private static void AddHistoryItem(Scene scene)
+		{
+			HistoryItem item = new HistoryItem
+			{
+				name = scene.name,
+				path = scene.path
+			};
 
-            if (string.IsNullOrEmpty(scene.path)) item.name = "Unsaved Scene";
+			if (string.IsNullOrEmpty(scene.path))
+			{
+				item.name = "Unsaved Scene";
+			}
 
-            sceneHistory.Insert(0, item);
+			sceneHistory.Insert(0, item);
 
-            while (sceneHistory.Count > MAX_ITEMS)
-            {
-                sceneHistory.RemoveAt(sceneHistory.Count - 1);
-            }
+			while (sceneHistory.Count > MAX_ITEMS)
+			{
+				sceneHistory.RemoveAt(sceneHistory.Count - 1);
+			}
 
-            UpdateHistoryNames();
+			UpdateHistoryNames();
 
-            SaveHistory();
+			SaveHistory();
 
-            SetIndex(0);
-        }
+			SetIndex(0);
+		}
 
-        private static void UpdateHistoryNames()
-        {
-            sceneHistoryNames = new string[sceneHistory.Count];
-            for (int i = 0; i < sceneHistory.Count; i++)
-            {
-                sceneHistoryNames[i] = (i > 0 ? (-i).ToString() : "") + " " + sceneHistory[i].name;
-            }
-        }
+		private static void UpdateHistoryNames()
+		{
+			sceneHistoryNames = new string[sceneHistory.Count];
+			for (int i = 0; i < sceneHistory.Count; i++)
+			{
+				sceneHistoryNames[i] = (i > 0 ? (-i).ToString() : "") + " " + sceneHistory[i].name;
+			}
+		}
 
-        private static void Update()
-        {
-            if (!workInGame && Application.isPlaying)
-                return;
-            var activeScene = EditorSceneManager.GetActiveScene();
-            if (!activeScene.path.Equals(currentScenePath, System.StringComparison.Ordinal))
-            {
-                currentScenePath = activeScene.path;
+		private static void Update()
+		{
+			if (!workInGame && Application.isPlaying)
+			{
+				return;
+			}
 
-                // ignore scene changes that were triggered by the widget
-                if (ignoreNextSceneChange)
-                {
-                    ignoreNextSceneChange = false;
-                }
-                else
-                {
+			var activeScene = EditorSceneManager.GetActiveScene();
+			if (!activeScene.path.Equals(currentScenePath, System.StringComparison.Ordinal))
+			{
+				currentScenePath = activeScene.path;
 
-                    // if we're leaving an unsaved scene then remove it from history (we can't go back to it anyways)
-                    if (sceneHistory.Count > 0 && string.IsNullOrEmpty(sceneHistory[0].path))
-                    {
-                        sceneHistory.RemoveAt(0);
-                    }
+				// ignore scene changes that were triggered by the widget
+				if (ignoreNextSceneChange)
+				{
+					ignoreNextSceneChange = false;
+				}
+				else
+				{
 
-                    AddHistoryItem(activeScene);
+					// if we're leaving an unsaved scene then remove it from history (we can't go back to it anyways)
+					if (sceneHistory.Count > 0 && string.IsNullOrEmpty(sceneHistory[0].path))
+					{
+						sceneHistory.RemoveAt(0);
+					}
 
-                    SceneView.RepaintAll();
-                }
-            }
+					AddHistoryItem(activeScene);
 
-            HandleMouseInput();
-        }
+					SceneView.RepaintAll();
+				}
+			}
 
-        private static void OnGUI(SceneView sceneView)
-        {
-            Handles.BeginGUI();
+			HandleMouseInput();
+		}
 
-            int pickerWidth = 150;
-            int buttonWidth = 16;
-            int barHeight = 16;
-            int barWidth = pickerWidth + buttonWidth + buttonWidth + 4;
-            int currX = 0;
+		private static void OnGUI(SceneView sceneView)
+		{
+			Handles.BeginGUI();
 
-            if (showOnRight)
-            {
-                currX = (int)(Screen.width / EditorGUIUtility.pixelsPerPoint) - barWidth;
-            }
+			int pickerWidth = 150;
+			int buttonWidth = 16;
+			int barHeight = 16;
+			int barWidth = pickerWidth + buttonWidth + buttonWidth + 4;
+			int currX = 0;
 
-
-
-            GUI.Box(new Rect(currX, 0, barWidth, barHeight), "", EditorStyles.toolbar);
-
-            // back
-            GUI.enabled = CanGoBack;
-            if (GUI.Button(new Rect(currX, 0, buttonWidth, barHeight), "<", EditorStyles.toolbarButton))
-            {
-                LoadScene(currentSceneIndex + 1);
-            }
-            currX += buttonWidth;
-            GUI.enabled = true;
+			if (showOnRight)
+			{
+				currX = (int)(Screen.width / EditorGUIUtility.pixelsPerPoint) - barWidth;
+			}
 
 
-            // dropdown
-            int newSceneIndex = EditorGUI.Popup(new Rect(currX, 0, pickerWidth, barHeight), currentSceneIndex, sceneHistoryNames, EditorStyles.toolbarPopup);
-            if (newSceneIndex != currentSceneIndex)
-            {
-                LoadScene(newSceneIndex);
-            }
-            currX += pickerWidth;
+
+			GUI.Box(new Rect(currX, 0, barWidth, barHeight), "", EditorStyles.toolbar);
+
+			// back
+			GUI.enabled = CanGoBack;
+			if (GUI.Button(new Rect(currX, 0, buttonWidth, barHeight), "<", EditorStyles.toolbarButton))
+			{
+				LoadScene(currentSceneIndex + 1);
+			}
+			currX += buttonWidth;
+			GUI.enabled = true;
 
 
-            // forward
-            GUI.enabled = CanGoForwards;
-            if (GUI.Button(new Rect(currX, 0, buttonWidth, barHeight), ">", EditorStyles.toolbarButton))
-            {
-                LoadScene(currentSceneIndex - 1);
-            }
-            currX += buttonWidth;
-            GUI.enabled = true;
+			// dropdown
+			int newSceneIndex = EditorGUI.Popup(new Rect(currX, 0, pickerWidth, barHeight), currentSceneIndex, sceneHistoryNames, EditorStyles.toolbarPopup);
+			if (newSceneIndex != currentSceneIndex)
+			{
+				LoadScene(newSceneIndex);
+			}
+			currX += pickerWidth;
 
-            Handles.EndGUI();
 
-            HandleMouseInput();
-        }
+			// forward
+			GUI.enabled = CanGoForwards;
+			if (GUI.Button(new Rect(currX, 0, buttonWidth, barHeight), ">", EditorStyles.toolbarButton))
+			{
+				LoadScene(currentSceneIndex - 1);
+			}
+			currX += buttonWidth;
+			GUI.enabled = true;
 
-        private static bool CanGoBack
-        {
-            get { return sceneHistory.Count > 1 && currentSceneIndex < sceneHistory.Count - 1; }
-        }
+			Handles.EndGUI();
 
-        private static bool CanGoForwards
-        {
-            get { return currentSceneIndex != 0; }
-        }
+			HandleMouseInput();
+		}
 
-        private static void HandleMouseInput()
-        {
-            if (Event.current != null && Event.current.rawType == EventType.MouseDown)
-            {
-                int button = Event.current.button;
-                if (button == 3 && CanGoBack)
-                {
-                    LoadScene(currentSceneIndex + 1);
-                    Event.current.Use();
-                }
-                else if (button == 4 && CanGoForwards)
-                {
-                    LoadScene(currentSceneIndex - 1);
-                    Event.current.Use();
-                }
-            }
-        }
+		private static bool CanGoBack
+		{
+			get { return sceneHistory.Count > 1 && currentSceneIndex < sceneHistory.Count - 1; }
+		}
 
-        private static void LoadScene(int sceneIndex)
-        {
-            if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
-            {
-                ignoreNextSceneChange = true;
-                SetIndex(sceneIndex);
-                EditorSceneManager.OpenScene(sceneHistory[sceneIndex].path, OpenSceneMode.Single);
-            }
-        }
+		private static bool CanGoForwards
+		{
+			get { return currentSceneIndex != 0; }
+		}
 
-        private static void SetIndex(int index)
-        {
-            currentSceneIndex = index;
-            EditorPrefs.SetInt(HistoryKey("index"), currentSceneIndex);
-        }
+		private static void HandleMouseInput()
+		{
+			if (Event.current != null && Event.current.rawType == EventType.MouseDown)
+			{
+				int button = Event.current.button;
+				if (button == 3 && CanGoBack)
+				{
+					LoadScene(currentSceneIndex + 1);
+					Event.current.Use();
+				}
+				else if (button == 4 && CanGoForwards)
+				{
+					LoadScene(currentSceneIndex - 1);
+					Event.current.Use();
+				}
+			}
+		}
 
-        private static void SaveHistory()
-        {
-            for (int i = 0; i < sceneHistory.Count; i++)
-            {
-                EditorPrefs.SetString(HistoryKey(i + "_path"), sceneHistory[i].path);
-                EditorPrefs.SetString(HistoryKey(i + "_name"), sceneHistory[i].name);
-            }
-        }
+		private static void LoadScene(int sceneIndex)
+		{
+			if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+			{
+				ignoreNextSceneChange = true;
+				SetIndex(sceneIndex);
+				EditorSceneManager.OpenScene(sceneHistory[sceneIndex].path, OpenSceneMode.Single);
+			}
+		}
 
-        private static void LoadHistory()
-        {
-            for (int i = 0; i < MAX_ITEMS; i++)
-            {
-                if (EditorPrefs.HasKey(HistoryKey(i + "_path")) && EditorPrefs.HasKey(HistoryKey(i + "_name")))
-                {
-                    HistoryItem item = new HistoryItem
-                    {
-                        path = EditorPrefs.GetString(HistoryKey(i + "_path")),
-                        name = EditorPrefs.GetString(HistoryKey(i + "_name"))
-                    };
-                    sceneHistory.Add(item);
-                }
-                else
-                {
-                    break;
-                }
-            }
+		private static void SetIndex(int index)
+		{
+			currentSceneIndex = index;
+			EditorPrefs.SetInt(HistoryKey("index"), currentSceneIndex);
+		}
 
-            if (EditorPrefs.HasKey(HistoryKey("index")))
-            {
-                currentSceneIndex = EditorPrefs.GetInt(HistoryKey("index"));
-            }
+		private static void SaveHistory()
+		{
+			for (int i = 0; i < sceneHistory.Count; i++)
+			{
+				EditorPrefs.SetString(HistoryKey(i + "_path"), sceneHistory[i].path);
+				EditorPrefs.SetString(HistoryKey(i + "_name"), sceneHistory[i].name);
+			}
+		}
 
-            UpdateHistoryNames();
-        }
+		private static void LoadHistory()
+		{
+			for (int i = 0; i < MAX_ITEMS; i++)
+			{
+				if (EditorPrefs.HasKey(HistoryKey(i + "_path")) && EditorPrefs.HasKey(HistoryKey(i + "_name")))
+				{
+					HistoryItem item = new HistoryItem
+					{
+						path = EditorPrefs.GetString(HistoryKey(i + "_path")),
+						name = EditorPrefs.GetString(HistoryKey(i + "_name"))
+					};
+					sceneHistory.Add(item);
+				}
+				else
+				{
+					break;
+				}
+			}
 
-        private static string HistoryKey(string key)
-        {
-            return "sceneHistory_" + PlayerSettings.productName + "_" + key;
-        }
+			if (EditorPrefs.HasKey(HistoryKey("index")))
+			{
+				currentSceneIndex = EditorPrefs.GetInt(HistoryKey("index"));
+			}
 
-        [PreferenceItem("SceneHistory")]
-        private static void SceneHistory_Prefs()
-        {
-            bool newShowOnRight = EditorGUILayout.Toggle("Show On Right", showOnRight);
+			UpdateHistoryNames();
+		}
 
-            if (showOnRight != newShowOnRight)
-            {
-                showOnRight = newShowOnRight;
-                EditorPrefs.SetBool(HistoryKey("showOnRight"), showOnRight);
-            }
+		private static string HistoryKey(string key)
+		{
+			return "sceneHistory_" + PlayerSettings.productName + "_" + key;
+		}
 
-            if (GUILayout.Button("Clear History"))
-            {
-                for (int i = 0; i < MAX_ITEMS; i++)
-                {
-                    EditorPrefs.DeleteKey(HistoryKey(i + "_path"));
-                    EditorPrefs.DeleteKey(HistoryKey(i + "_name"));
-                }
+		[PreferenceItem("SceneHistory")]
+		private static void SceneHistory_Prefs()
+		{
+			bool newShowOnRight = EditorGUILayout.Toggle("Show On Right", showOnRight);
 
-                while (sceneHistory.Count > 1)
-                    sceneHistory.RemoveAt(1);
+			if (showOnRight != newShowOnRight)
+			{
+				showOnRight = newShowOnRight;
+				EditorPrefs.SetBool(HistoryKey("showOnRight"), showOnRight);
+			}
 
-                UpdateHistoryNames();
-            }
+			if (GUILayout.Button("Clear History"))
+			{
+				for (int i = 0; i < MAX_ITEMS; i++)
+				{
+					EditorPrefs.DeleteKey(HistoryKey(i + "_path"));
+					EditorPrefs.DeleteKey(HistoryKey(i + "_name"));
+				}
 
-        }
+				while (sceneHistory.Count > 1)
+				{
+					sceneHistory.RemoveAt(1);
+				}
 
-        private struct HistoryItem
-        {
-            public string name;
-            public string path;
-        }
-    }
+				UpdateHistoryNames();
+			}
+
+		}
+
+		private struct HistoryItem
+		{
+			public string name;
+			public string path;
+		}
+	}
 }

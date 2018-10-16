@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using UnityEditor;
+﻿using UnityEditor;
+using UnityEngine;
 
 /// <summary>
 /// Adds a draw script function to the Editor class.
@@ -9,13 +9,13 @@ using UnityEditor;
 public static class ExtendEditor
 {
 
-    public static void DrawScript(this Editor editor)
-    {
-        EditorGUI.BeginDisabledGroup(true);
-        SerializedProperty prop = editor.serializedObject.FindProperty("m_Script");
-        EditorGUILayout.PropertyField(prop, true, new GUILayoutOption[0]);
-        EditorGUI.EndDisabledGroup();
+	public static void DrawScript(this Editor editor)
+	{
+		EditorGUI.BeginDisabledGroup(true);
+		SerializedProperty prop = editor.serializedObject.FindProperty("m_Script");
+		EditorGUILayout.PropertyField(prop, true, new GUILayoutOption[0]);
+		EditorGUI.EndDisabledGroup();
 
-    }
+	}
 
 }

@@ -1,10 +1,8 @@
-using LUT.Events;
-using UnityEngine;
 using UnityEngine.Events;
 
 namespace LUT.Events.Primitives
 {
-    public sealed class EventFloatMonobehaviour : EventMonoBehaviour<float, EventFloat, UnityEventFloat>
-    {
-    }
+	public sealed class EventFloatMonobehaviour : EventMonoBehaviour<float, EventFloat, UnityEventFloat>
+	{
+	}
 }

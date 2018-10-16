@@ -3,15 +3,15 @@ using UnityEngine.UI;
 
 namespace LUT.Snippets.UI
 {
-    public sealed class TextVersion : MonoBehaviour
-    {
-        [SerializeField]
-        [AutoFind(typeof(Text))]
-        private Text _text;
+	public sealed class TextVersion : MonoBehaviour
+	{
+		[SerializeField]
+		[AutoFind(typeof(Text))]
+		private Text _text;
 
-        private void OnEnable()
-        {
-            _text.text = "v" + Application.version;
-        }
-    }
+		private void OnEnable()
+		{
+			_text.text = "v" + Application.version;
+		}
+	}
 }
