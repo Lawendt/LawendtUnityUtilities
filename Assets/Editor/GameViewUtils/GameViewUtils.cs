@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
-using UnityEngine;
 using UnityEditorInternal;
+using UnityEngine;
 
 /// <summary>
 /// Class to manipulate the gameview sizes.
@@ -11,6 +11,7 @@ using UnityEditorInternal;
 /// Developed by Fábio Damian (@Biodam)
 /// Original available @ https://gist.github.com/Biodam/b0616918ea5c50c2c9e4b16e5bb1034b
 /// </summary>
+/// 
 [InitializeOnLoad]
 public static class GameViewUtils
 {
@@ -20,8 +21,8 @@ public static class GameViewUtils
         FixedResolution
     }
 
-    static object gameViewSizesInstance;
-    static MethodInfo getGroup;
+    private static object gameViewSizesInstance;
+    private static MethodInfo getGroup;
 
     static GameViewUtils()
     {
@@ -66,7 +67,9 @@ public static class GameViewUtils
     {
         int idx = FindSize(GameViewSizeGroupType.Standalone, 123, 456);
         if (idx != -1)
+        {
             SetSize(idx);
+        }
     }
 
     [MenuItem("Tools/GameViewUtils/Test/SizeDimensionsQuery")]
@@ -93,11 +96,11 @@ public static class GameViewUtils
 
     public static void SetSize(int index)
     {
-        var gvWndType = typeof(Editor).Assembly.GetType("UnityEditor.GameView");
-        var selectedSizeIndexProp = gvWndType.GetProperty("selectedSizeIndex",
+        var gameViewWindowType = typeof(Editor).Assembly.GetType("UnityEditor.GameView");
+        var selectedSizeIndexProp = gameViewWindowType.GetProperty("selectedSizeIndex",
                                         BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-        var gvWnd = EditorWindow.GetWindow(gvWndType);
-        selectedSizeIndexProp.SetValue(gvWnd, index, null);
+        var gameViewWindow = EditorWindow.GetWindow(gameViewWindowType);
+        selectedSizeIndexProp.SetValue(gameViewWindow, index, null);
     }
 
     public static void AddCustomSize(GameViewSizeType viewSizeType, GameViewSizeGroupType sizeGroupType, int width, int height, string text)
@@ -188,9 +191,14 @@ public static class GameViewUtils
             //Debug.Log(display);
             int pren = display.IndexOf('(');
             if (pren != -1)
+            {
                 display = display.Substring(0, pren - 1); // -1 to remove the space that's before the prens. This is very implementation-depdenent
+            }
+
             if (display == text)
+            {
                 return i;
+            }
         }
         return -1;
     }
@@ -198,6 +206,45 @@ public static class GameViewUtils
     public static bool SizeExists(GameViewSizeGroupType sizeGroupType, int width, int height)
     {
         return FindSize(sizeGroupType, width, height) != -1;
+    }
+
+    public static string[] GetArrayOfAllGameViewResolutions()
+    {
+        var group = GetGroup(GetGameViewSizeGroupTypeByCurrentBuild());
+        var getDisplayTexts = group.GetType().GetMethod("GetDisplayTexts");
+        var displayTexts = getDisplayTexts.Invoke(group, null) as string[];
+
+        return displayTexts;
+    }
+
+    public static GameViewSizeGroupType GetGameViewSizeGroupTypeByCurrentBuild()
+    {
+        switch (EditorUserBuildSettings.activeBuildTarget)
+        {
+            case BuildTarget.Android:
+                return GameViewSizeGroupType.Android;
+
+            case BuildTarget.StandaloneOSX:
+            case BuildTarget.StandaloneWindows:
+            case BuildTarget.StandaloneLinux:
+            case BuildTarget.StandaloneWindows64:
+                return GameViewSizeGroupType.Standalone;
+
+            case BuildTarget.iOS:
+                return GameViewSizeGroupType.iOS;
+
+            //DONT KNOW
+            case BuildTarget.XboxOne:
+            case BuildTarget.tvOS:
+            case BuildTarget.Switch:
+            case BuildTarget.Lumin:
+            case BuildTarget.WebGL:
+            case BuildTarget.WSAPlayer:
+            case BuildTarget.PS4:
+                break;
+        }
+
+        return GameViewSizeGroupType.Standalone;
     }
 
     public static int FindSize(GameViewSizeGroupType sizeGroupType, int width, int height)
@@ -224,12 +271,14 @@ public static class GameViewUtils
             int sizeWidth = (int)widthProp.GetValue(size, null);
             int sizeHeight = (int)heightProp.GetValue(size, null);
             if (sizeWidth == width && sizeHeight == height)
+            {
                 return i;
+            }
         }
         return -1;
     }
 
-    static object GetGroup(GameViewSizeGroupType type)
+    private static object GetGroup(GameViewSizeGroupType type)
     {
         return getGroup.Invoke(gameViewSizesInstance, new object[] { (int)type });
     }
@@ -271,10 +320,9 @@ public static class GameViewUtils
     private static void SetSizeAndRepaint(int index)
     {
         var currType = GetCurrentGroupType();
-        var builtInCount = GetBuiltInCount(currType);
-        if (builtInCount + index < GetTotalCount(currType))
+        if (index < GetTotalCount(currType))
         {
-            SetSize(builtInCount + index);
+            SetSize(index);
             UpdateZoomAreaAndParent();
             //The UpdateZoomAreaAndParent already repaints the game view
             //InternalEditorUtility.RepaintAllViews();
@@ -309,20 +357,22 @@ public static class GameViewUtils
 
         public CustomGameViewCollection()
         {
-            customGameViewSizes = new List<CustomGameViewSize>();
-            //Landscape
-            customGameViewSizes.Add(new CustomGameViewSize("HD Landscape", 1280, 720));
-            customGameViewSizes.Add(new CustomGameViewSize("Full HD Landscape", 1920, 1080));
-            customGameViewSizes.Add(new CustomGameViewSize("Galaxy S9 Landscape", 2960, 1440));
-            customGameViewSizes.Add(new CustomGameViewSize("iPhone Xs Max Landscape", 2688, 1242));
-            customGameViewSizes.Add(new CustomGameViewSize("iPad Pro 10.5 Landscape", 2224, 1668));
+            customGameViewSizes = new List<CustomGameViewSize>
+            {
+                //Landscape
+                new CustomGameViewSize("HD Landscape", 1280, 720),
+                new CustomGameViewSize("Full HD Landscape", 1920, 1080),
+                new CustomGameViewSize("Galaxy S9 Landscape", 2960, 1440),
+                new CustomGameViewSize("iPhone Xs Max Landscape", 2688, 1242),
+                new CustomGameViewSize("iPad Pro 10.5 Landscape", 2224, 1668),
 
-            //Portrait
-            customGameViewSizes.Add(new CustomGameViewSize("HD Portrait", 720, 1280));
-            customGameViewSizes.Add(new CustomGameViewSize("Full HD Portrait", 1080, 1920));
-            customGameViewSizes.Add(new CustomGameViewSize("Galaxy S9 Portrait", 1440, 2960));
-            customGameViewSizes.Add(new CustomGameViewSize("iPhone Xs Max Portrait", 1242, 2688));
-            customGameViewSizes.Add(new CustomGameViewSize("iPad Pro 10.5 Portrait", 1668, 2224));
+                //Portrait
+                new CustomGameViewSize("HD Portrait", 720, 1280),
+                new CustomGameViewSize("Full HD Portrait", 1080, 1920),
+                new CustomGameViewSize("Galaxy S9 Portrait", 1440, 2960),
+                new CustomGameViewSize("iPhone Xs Max Portrait", 1242, 2688),
+                new CustomGameViewSize("iPad Pro 10.5 Portrait", 1668, 2224)
+            };
         }
     }
     private static CustomGameViewCollection customGameViewCollection;
@@ -377,15 +427,20 @@ public static class GameViewUtils
 
         if (groupTypes == null)
         {
-            groupTypes = new List<GameViewSizeGroupType>(2);
-            groupTypes.Add(GameViewSizeGroupType.Android);
-            groupTypes.Add(GameViewSizeGroupType.iOS);
+            groupTypes = new List<GameViewSizeGroupType>(2)
+            {
+                GameViewSizeGroupType.Android,
+                GameViewSizeGroupType.iOS,
+                GameViewSizeGroupType.Standalone
+            };
             SetupGroupTypesRL();
         }
         if (groupTypes != null)
         {
             if (groupTypesRL != null)
+            {
                 groupTypesRL.DoLayoutList();
+            }
         }
 
         if (customGameViewCollection != null && customGameViewCollectionSO != null && customGamViewSizesRL != null)
@@ -417,7 +472,7 @@ public static class GameViewUtils
                     }
                     else
                     {
-                        //Debug.Log("Size : " + custom.name + " already exists, skipping.");
+                        Debug.Log("Size : " + custom.name + " already exists, skipping.");
                     }
                 }
             }
@@ -433,78 +488,85 @@ public static class GameViewUtils
     private static void DrawQuickSelectSettings()
     {
         EditorGUILayout.LabelField("Quick select indexes:", EditorStyles.boldLabel);
-        EditorGUILayout.HelpBox("Use quick select with alt+(1/2/3) it will select the game size of the index configured here.", MessageType.Info, true);
-        int maxCustom = GetCustomCount(GetCurrentGroupType());
+        EditorGUILayout.HelpBox("Use quick select with alt+(1/2/3/4) it will select the game size of the index configured here.", MessageType.Info, true);
+        int maxTotal = GetTotalCount(GetCurrentGroupType());
+
+        string[] options = GetArrayOfAllGameViewResolutions();
+
         for (int i = 0; i < quickSelect.Length; i++)
         {
             EditorGUILayout.BeginHorizontal();
-            GUILayout.Label(Number2String(i + 1, true));
-            quickSelect[i] = EditorGUILayout.IntSlider(quickSelect[i], 0, maxCustom - 1);
+            GUILayout.Label("Alt + " + (i + 1));
+            quickSelect[i] = EditorGUILayout.Popup(quickSelect[i], options);
             EditorGUILayout.EndHorizontal();
         }
     }
 
     private static void SetupGroupTypesRL()
     {
-        groupTypesRL = new ReorderableList(groupTypes, typeof(GameViewSizeGroupType));
-
-        groupTypesRL.drawHeaderCallback = (Rect rect) =>
+        groupTypesRL = new ReorderableList(groupTypes, typeof(GameViewSizeGroupType))
         {
-            EditorGUI.LabelField(rect, "Group types to add the custom sizes:");
-        };
+            drawHeaderCallback = (Rect rect) =>
+            {
+                EditorGUI.LabelField(rect, "Group types to add the custom sizes:");
+            },
 
-        groupTypesRL.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
-        {
-            rect.y += 2;
-            groupTypes[index] = (GameViewSizeGroupType)EditorGUI.EnumPopup(rect, groupTypes[index]);
+            drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+            {
+                rect.y += 2;
+                groupTypes[index] = (GameViewSizeGroupType)EditorGUI.EnumPopup(rect, groupTypes[index]);
+            }
         };
     }
 
     private static void SetupCustomGamViewSizesRL()
     {
-        customGamViewSizesRL = new ReorderableList(customGameViewCollectionSO, customGameViewSizesSP);
-
-        customGamViewSizesRL.drawHeaderCallback = (Rect rect) =>
+        customGamViewSizesRL = new ReorderableList(customGameViewCollectionSO, customGameViewSizesSP)
         {
-            EditorGUI.LabelField(rect, "Custom sizes to add:");
-        };
+            drawHeaderCallback = (Rect rect) =>
+            {
+                EditorGUI.LabelField(rect, "Custom sizes to add:");
+            },
 
-        customGamViewSizesRL.elementHeight = (EditorGUIUtility.singleLineHeight * 3) + (EditorGUIUtility.singleLineHeight / 2);
+            elementHeight = (EditorGUIUtility.singleLineHeight * 3) + (EditorGUIUtility.singleLineHeight / 2),
 
-        customGamViewSizesRL.drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
-        {
-            float singleLineHeight = EditorGUIUtility.singleLineHeight;
-            //EditorGUI.PropertyField(rect, customGameViewSizesSP.GetArrayElementAtIndex(index), true);
-            var current = customGameViewSizesSP.GetArrayElementAtIndex(index);
-            var rectSingleLineHeight = new Rect(rect);
-            rectSingleLineHeight.height = singleLineHeight;
+            drawElementCallback = (Rect rect, int index, bool isActive, bool isFocused) =>
+            {
+                float singleLineHeight = EditorGUIUtility.singleLineHeight;
+                //EditorGUI.PropertyField(rect, customGameViewSizesSP.GetArrayElementAtIndex(index), true);
+                var current = customGameViewSizesSP.GetArrayElementAtIndex(index);
+                var rectSingleLineHeight = new Rect(rect)
+                {
+                    height = singleLineHeight
+                };
 
-            EditorGUI.PropertyField(rectSingleLineHeight, current.FindPropertyRelative("name"));
-            rectSingleLineHeight.y += singleLineHeight;
-            EditorGUI.PropertyField(rectSingleLineHeight, current.FindPropertyRelative("type"));
-            rectSingleLineHeight.y += singleLineHeight;
+                EditorGUI.PropertyField(rectSingleLineHeight, current.FindPropertyRelative("name"));
+                rectSingleLineHeight.y += singleLineHeight;
+                EditorGUI.PropertyField(rectSingleLineHeight, current.FindPropertyRelative("type"));
+                rectSingleLineHeight.y += singleLineHeight;
 
-            float fractionWidth = rect.width / 4;
-            rectSingleLineHeight.width = fractionWidth;
-            EditorGUI.LabelField(rectSingleLineHeight, "Width:");
-            rectSingleLineHeight.x += fractionWidth;
-            EditorGUI.PropertyField(rectSingleLineHeight, current.FindPropertyRelative("width"), GUIContent.none);
-            rectSingleLineHeight.x += fractionWidth;
-            EditorGUI.LabelField(rectSingleLineHeight, "Height:");
-            rectSingleLineHeight.x += fractionWidth;
-            EditorGUI.PropertyField(rectSingleLineHeight, current.FindPropertyRelative("height"), GUIContent.none);
+                float fractionWidth = rect.width / 4;
+                rectSingleLineHeight.width = fractionWidth;
+                EditorGUI.LabelField(rectSingleLineHeight, "Width:");
+                rectSingleLineHeight.x += fractionWidth;
+                EditorGUI.PropertyField(rectSingleLineHeight, current.FindPropertyRelative("width"), GUIContent.none);
+                rectSingleLineHeight.x += fractionWidth;
+                EditorGUI.LabelField(rectSingleLineHeight, "Height:");
+                rectSingleLineHeight.x += fractionWidth;
+                EditorGUI.PropertyField(rectSingleLineHeight, current.FindPropertyRelative("height"), GUIContent.none);
 
-            rectSingleLineHeight.x = rect.x;
-            rectSingleLineHeight.y += singleLineHeight + 3;
-            rectSingleLineHeight.height = 1;
-            rectSingleLineHeight.width = rect.width;
-            GUI.Box(rectSingleLineHeight, "");
+                rectSingleLineHeight.x = rect.x;
+                rectSingleLineHeight.y += singleLineHeight + 3;
+                rectSingleLineHeight.height = 1;
+                rectSingleLineHeight.width = rect.width;
+                GUI.Box(rectSingleLineHeight, "");
+            }
         };
     }
 
-    private static String Number2String(int number, bool isCaps)
+    private static string Number2String(int number, bool isCaps)
     {
-        Char c = (Char)((isCaps ? 65 : 97) + (number - 1));
+        char c = (char)((isCaps ? 65 : 97) + (number - 1));
 
         return c.ToString();
     }
