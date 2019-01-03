@@ -1,7 +1,9 @@
 #Always ignore
 /[Ll]ibrary/
+/[Tt]emp/
 [Dd]esktop.ini
 
 #You can force anything you want, but usually this is not required
-/ProjectSettings/ 
+/[Pp]roject[Ss]ettings/ 
+/[Pp]ackages/
 
