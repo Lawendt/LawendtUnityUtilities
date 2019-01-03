@@ -4,8 +4,8 @@ using UnityEngine.Events;
 public sealed class OnCollision2D : MonoBehaviour
 {
 	[SerializeField]
-	private LayerMask _layerMask;
-	public UnityEvent OnCollision;
+	private LayerMask _layerMask = new LayerMask();
+	public UnityEvent OnCollision = new UnityEvent();
 
 	private void OnCollisionEnter2D(Collision2D collision)
 	{

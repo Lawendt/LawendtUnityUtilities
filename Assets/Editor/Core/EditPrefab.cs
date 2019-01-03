@@ -1,3 +1,6 @@
+#if UNITY_2018_3_OR_NEWER
+// There is no need for this on the new prefab workflow
+#else
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -99,3 +102,4 @@ namespace LUT
 		}
 	}
 }
+#endif
