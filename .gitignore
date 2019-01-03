@@ -1,0 +1,7 @@
+#Always ignore
+/[Ll]ibrary/
+[Dd]esktop.ini
+
+#You can force anything you want, but usually this is not required
+/ProjectSettings/ 
+
