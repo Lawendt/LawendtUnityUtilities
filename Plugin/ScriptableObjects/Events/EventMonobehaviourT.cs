@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace LUT.Events
 {
-	public class EventMonoBehaviour<T, EventObjectType, UnityEventType> : MonoBehaviour where UnityEventType : UnityEvent<T> where EventObjectType : EventObject<T>
+	public class EventMonoBehaviour<T, EventObjectType, UnityEventType> : MonoBehaviour where UnityEventType : UnityEvent<T>, new()  where EventObjectType : EventObject<T> 
 	{
 
 		[SerializeField]
@@ -12,7 +12,7 @@ namespace LUT.Events
 		private EventObjectType _cacheEvent;
 #endif
 		[SerializeField]
-		private UnityEventType _onInvoke;
+		private UnityEventType _onInvoke = new UnityEventType();
 
 #if UNITY_EDITOR
 		private void OnValidate()

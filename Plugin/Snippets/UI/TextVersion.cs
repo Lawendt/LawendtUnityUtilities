@@ -9,7 +9,12 @@ namespace LUT.Snippets.UI
 		[AutoFind(typeof(Text))]
 		private Text _text;
 
-		private void OnEnable()
+        private void Reset()
+        {
+            _text = GetComponentInChildren<Text>();
+        }
+
+        private void OnEnable()
 		{
 			_text.text = "v" + Application.version;
 		}
