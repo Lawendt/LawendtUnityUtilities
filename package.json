@@ -1,0 +1,13 @@
+{
+    "name": "com.lawendt.lut",
+    "displayName": "Lawendt's Unity Utilities",
+    "version": "1.0.0",
+    "unity": "2018.3",
+    "description": "A set of useful scripts for Unity.",
+    "keywords": [
+        "utilities",
+		"scriptableObject",
+        "event"
+    ],
+    "category": "Unity"
+}
