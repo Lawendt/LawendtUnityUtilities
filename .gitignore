@@ -2,7 +2,9 @@
 /[Ll]ibrary/
 /[Tt]emp/
 [Dd]esktop.ini
-
+obj/
+[Ll]ogs/
+.vs/
 #You can force anything you want, but usually this is not required
 /[Pp]roject[Ss]ettings/ 
 
