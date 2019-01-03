@@ -1,0 +1,12 @@
+{
+    "name": "UnityLawUtilitiesEditor",
+    "references": [
+        "UnityLawUtilities"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}
