@@ -76,6 +76,7 @@
     <Compile Include="Assets\Editor\CustomAttributes\ShowIfDrawer.cs" />
     <Compile Include="Assets\Editor\CustomAttributes\TagSelectorPropertyDrawer.cs" />
     <Compile Include="Assets\Editor\Extenders\ExtendEditor.cs" />
+    <Compile Include="Assets\Editor\GameViewUtils\GameViewUtils.cs" />
     <Compile Include="Assets\Editor\ScriptableObjects\Events\CustomUnityEventSignal.cs" />
     <Compile Include="Assets\Editor\ScriptableObjects\Events\EventFloatEditor.cs" />
     <Compile Include="Assets\Editor\ScriptableObjects\Events\EventInspector.cs" />
