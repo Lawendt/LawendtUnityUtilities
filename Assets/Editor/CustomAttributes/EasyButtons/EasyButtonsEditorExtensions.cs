@@ -8,7 +8,7 @@ namespace LUT
 {
 	public static class EasyButtonsEditorExtensions
 	{
-		public static void DrawEasyButtons(this Editor editor)
+		public static void DrawButtons(this Editor editor)
 		{
 			// Loop through all methods with no parameters
 			var methods = editor.target.GetType()
@@ -17,16 +17,16 @@ namespace LUT
 			foreach (var method in methods)
 			{
 				// Get the ButtonAttribute on the method (if any)
-				var ba = (ButtonAttribute)Attribute.GetCustomAttribute(method, typeof(ButtonAttribute));
+				var attribute = (ButtonAttribute)Attribute.GetCustomAttribute(method, typeof(ButtonAttribute));
 
-				if (ba != null)
+				if (attribute != null)
 				{
 					// Determine whether the button should be enabled based on its mode
-					GUI.enabled = ba.Mode == ButtonMode.AlwaysEnabled
-						|| (EditorApplication.isPlaying ? ba.Mode == ButtonMode.EnabledInPlayMode : ba.Mode == ButtonMode.DisabledInPlayMode);
+					GUI.enabled = attribute.Mode == ButtonMode.AlwaysEnabled
+						|| (EditorApplication.isPlaying ? attribute.Mode == ButtonMode.EnabledInPlayMode : attribute.Mode == ButtonMode.DisabledInPlayMode);
 
 					// Draw a button which invokes the method
-					var buttonName = String.IsNullOrEmpty(ba.Name) ? ObjectNames.NicifyVariableName(method.Name) : ba.Name;
+					var buttonName = string.IsNullOrEmpty(attribute.Name) ? ObjectNames.NicifyVariableName(method.Name) : attribute.Name;
 					if (GUILayout.Button(buttonName))
 					{
 						foreach (var t in editor.targets)
