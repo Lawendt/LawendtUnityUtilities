@@ -7,7 +7,6 @@ namespace LUT.Events
 	/// <summary>
 	/// Serialized event
 	/// </summary>
-	[CreateAssetMenu(fileName = "Event", menuName = "Event/Default", order = 50)]
 	public class EventObject : ScriptableObject
 	{
 		[SerializeField]
@@ -28,7 +27,7 @@ namespace LUT.Events
 		public void Register(Action handler)
 		{
 #if UNITY_EDITOR
-			UnityEngine.Debug.Assert(handler.Method.GetCustomAttributes(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), inherit: false).Length == 0,
+			Debug.Assert(handler.Method.GetCustomAttributes(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), inherit: false).Length == 0,
 				"Adding anonymous delegates as Signal callbacks is not supported (you wouldn't be able to unregister them later).");
 #endif
 			actions.Add(handler);
@@ -81,10 +80,15 @@ namespace LUT.Events
 		}
 	}
 
-	public class EventObject<T> : ScriptableObject
+	public abstract class EventObject<T> : ScriptableObject
 	{
+#if UNITY_EDITOR
+#pragma warning disable 0414
 		[SerializeField]
-		private readonly List<Action<T>> actions = new List<Action<T>>();
+		private T valueToInvokeWith = default;
+#endif
+		[SerializeField]
+		private List<Action<T>> actions = new List<Action<T>>();
 
 		/// <summary>
 		/// How many actions registered.
@@ -101,7 +105,7 @@ namespace LUT.Events
 		public void Register(Action<T> handler)
 		{
 #if UNITY_EDITOR
-			UnityEngine.Debug.Assert(handler.Method.GetCustomAttributes(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), inherit: false).Length == 0,
+			Debug.Assert(handler.Method.GetCustomAttributes(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute), inherit: false).Length == 0,
 				"Adding anonymous delegates as Signal callbacks is not supported (you wouldn't be able to unregister them later).");
 #endif
 			actions.Add(handler);
@@ -127,7 +131,7 @@ namespace LUT.Events
 		/// <summary>
 		/// Trigger all callbacks.
 		/// </summary>
-		public void Invoke(T arg0 = default(T))
+		public void Invoke(T arg0 = default)
 		{
 			// Iterate on the handler list backwards
 			// so that if any of the handlers remove

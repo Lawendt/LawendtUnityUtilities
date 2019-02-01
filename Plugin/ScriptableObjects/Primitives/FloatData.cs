@@ -2,7 +2,6 @@ using UnityEngine;
 
 namespace LUT.Primitive
 {
-	[CreateAssetMenu(fileName = "FloatData", menuName = "Data/Primitive/Float", order = 100)]
 	public sealed class FloatData : ScriptableObject
 	{
 		[SerializeField]

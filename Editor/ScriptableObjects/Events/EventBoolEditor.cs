@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace LUT.Events.Primitives
 {
-	[CustomEditor(typeof(EventFloat))]
-	public sealed class EventFloatEditor : EventObjectTEditor<EventFloat, float>
+	[CustomEditor(typeof(EventBool))]
+	public sealed class EventBoolEditor : EventObjectTEditor<EventBool, bool>
 	{
-		private EventFloat internalEvent;
+		private EventBool internalEvent;
 		private SerializedProperty sp_valueToInvoke;
 
 		private void OnEnable()
 		{
-			internalEvent = (EventFloat)target;
+			internalEvent = (EventBool)target;
 			sp_valueToInvoke = serializedObject.FindProperty("valueToInvokeWith");
 		}
 		public override void OnInspectorGUI()
@@ -22,7 +22,7 @@ namespace LUT.Events.Primitives
 
 			if (GUILayout.Button("Trigger event"))
 			{
-				internalEvent.Invoke(sp_valueToInvoke.floatValue);
+				internalEvent.Invoke(sp_valueToInvoke.boolValue);
 			}
 
 			serializedObject.ApplyModifiedProperties();

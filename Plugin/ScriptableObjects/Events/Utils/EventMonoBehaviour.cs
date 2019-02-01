@@ -30,6 +30,7 @@ namespace LUT.Events
 			_onInvoke = new UnityEvent();
 			_targetEvent = null;
 		}
+
 		public void OnEnable()
 		{
 			if (_targetEvent == null)
