@@ -5,6 +5,7 @@
 obj/
 [Ll]ogs/
 .vs/
+.csproj
 #You can force anything you want, but usually this is not required
 /[Pp]roject[Ss]ettings/ 
 
