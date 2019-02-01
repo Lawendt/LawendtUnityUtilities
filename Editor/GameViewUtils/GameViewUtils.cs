@@ -36,62 +36,6 @@ public static class GameViewUtils
         LoadQuickSelectSettings();
     }
 
-    #region Examples
-
-    [MenuItem("Tools/GameViewUtils/Test/AddSize")]
-    public static void AddTestSize()
-    {
-        AddCustomSize(GameViewSizeType.AspectRatio, GameViewSizeGroupType.Standalone, 123, 456, "Test size");
-    }
-
-    [MenuItem("Tools/GameViewUtils/Test/SizeTextQuery")]
-    public static void SizeTextQueryTest()
-    {
-        Debug.Log(SizeExists(GameViewSizeGroupType.Standalone, "Test size"));
-    }
-
-    [MenuItem("Tools/GameViewUtils/Test/Query16:9Test")]
-    public static void WidescreenQueryTest()
-    {
-        Debug.Log(SizeExists(GameViewSizeGroupType.Standalone, "16:9"));
-    }
-
-    [MenuItem("Tools/GameViewUtils/Test/Set16:9")]
-    public static void SetWidescreenTest()
-    {
-        SetSize(FindSize(GameViewSizeGroupType.Standalone, "16:9"));
-    }
-
-    [MenuItem("Tools/GameViewUtils/Test/SetTestSize")]
-    public static void SetTestSize()
-    {
-        int idx = FindSize(GameViewSizeGroupType.Standalone, 123, 456);
-        if (idx != -1)
-        {
-            SetSize(idx);
-        }
-    }
-
-    [MenuItem("Tools/GameViewUtils/Test/SizeDimensionsQuery")]
-    public static void SizeDimensionsQueryTest()
-    {
-        Debug.Log(SizeExists(GameViewSizeGroupType.Standalone, 123, 456));
-    }
-
-    [MenuItem("Tools/GameViewUtils/Test/LogCurrentGroupType")]
-    public static void LogCurrentGroupType()
-    {
-        Debug.Log(GetCurrentGroupType());
-    }
-
-    [MenuItem("Tools/GameViewUtils/Test/GetBuiltInCount")]
-    public static void GetBuiltInCount()
-    {
-        Debug.Log("GetBuiltInCount: " + GetBuiltInCount(GetCurrentGroupType()));
-    }
-
-    #endregion
-
     #region Methods
 
     public static void SetSize(int index)
@@ -564,11 +508,5 @@ public static class GameViewUtils
         };
     }
 
-    private static string Number2String(int number, bool isCaps)
-    {
-        char c = (char)((isCaps ? 65 : 97) + (number - 1));
-
-        return c.ToString();
-    }
     #endregion
 }

@@ -60,11 +60,11 @@ namespace LUT
 					new GUIContent(property.enumDisplayNames[property.enumValueIndex]);
 				if (DropdownButton(id, position, buttonText))
 				{
-					Action<int> onSelect = i =>
+					void onSelect(int i)
 					{
 						property.enumValueIndex = i;
 						property.serializedObject.ApplyModifiedProperties();
-					};
+					}
 
 					SearchablePopup.Show(position, property.enumDisplayNames,
 						property.enumValueIndex, onSelect);

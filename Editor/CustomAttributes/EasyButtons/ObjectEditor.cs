@@ -14,7 +14,7 @@ namespace LUT
 			// Draw the rest of the inspector as usual
 			DrawDefaultInspector();
 
-			this.DrawEasyButtons();
+			this.DrawButtons();
 		}
 	}
 }
