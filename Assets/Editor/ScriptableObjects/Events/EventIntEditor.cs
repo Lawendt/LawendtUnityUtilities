@@ -4,13 +4,16 @@ using UnityEngine;
 namespace LUT.Events.Primitives
 {
 	[CustomEditor(typeof(EventInt))]
-	public sealed class EventIntEditor : Editor
+	public sealed class EventIntEditor : EventObjectTEditor<EventInt, int>
 	{
 		EventInt internalEventInt;
-		int valueToInvokeWith = 0;
+		private SerializedProperty _valueToInvokeWith;
+
 		private void OnEnable()
 		{
 			internalEventInt = (EventInt)target;
+			_valueToInvokeWith = serializedObject.FindProperty("valueToInvokeWith");
+
 		}
 		public override void OnInspectorGUI()
 		{
@@ -19,11 +22,9 @@ namespace LUT.Events.Primitives
 			base.OnInspectorGUI();
 
 
-			valueToInvokeWith = EditorGUILayout.IntField("Trigger with:", valueToInvokeWith);
-
 			if (GUILayout.Button("Trigger event"))
 			{
-				internalEventInt.Invoke(valueToInvokeWith);
+				internalEventInt.Invoke(_valueToInvokeWith.intValue);
 			}
 
 			serializedObject.ApplyModifiedProperties();
