@@ -4,85 +4,47 @@ namespace LUT
 {
 
 	/// <summary>
-	/// Singleton pattern implemented using unique game objects. 
+	/// Singleton pattern implemented with lazy instation.
+	/// 
+	/// It assures that only one object exists and if not it creates one gameobject with thes desired script
+	/// 
+	/// 
 	/// Modifications made by Lawendt and Fabio Damian 
 	/// Available @ https://github.com/Lawendt/UnityLawUtilities
 	/// Original can be found @ http://wiki.unity3d.com/index.php/Singleton
 	/// </summary>
 	public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 	{
-		public bool _dontDestroyOnLoad = false;
-		public bool _destroyExistentObject = false;
-		private static T _instance;
+		public bool _persistent = true;
+		public bool _destroyExistentObject = true;
 
+		private static T _instance;
 		private static object _lock = new object();
 
-
-		public static bool haveInstance()
+		public static bool HasInstance()
 		{
 			if (applicationIsQuitting)
 			{
 				return false;
 			}
-			if (_instance == null)
-			{
-				_instance = (T)FindObjectOfType(typeof(T));
-			}
-
-			if (_instance == null)
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
+			return _instance;
 		}
+
 		public static T Instance
 		{
-
 			get
 			{
-				if (applicationIsQuitting)
-				{
-					Debug.LogWarning("[Singleton] Instance '" + typeof(T) +
-						"' already destroyed on application quit." +
-						" Won't create again - returning null.");
-					return null;
-				}
 				lock (_lock)
 				{
-					if (_instance == null)
+					if (HasInstance())
 					{
 						_instance = (T)FindObjectOfType(typeof(T));
 
-						if (FindObjectsOfType(typeof(T)).Length > 1)
-						{
-							Debug.LogError("[Singleton] Something went really wrong " +
-								" - there should never be more than 1 singleton!" +
-								" Reopening the scene might fix it.");
-							return _instance;
-						}
-
 						if (_instance == null)
 						{
-
-							GameObject singleton = new GameObject("(singleton)<" + typeof(T) + ">", typeof(T));
-
-							DontDestroyOnLoad(singleton);
-
-
-							/*Debug.Log("[Singleton] An instance of " + typeof(T) +
-								" is needed in the scene, so '" + singleton +
-								"' was created with DontDestroyOnLoad.");
-							*/
-							_instance = singleton.GetComponent<T>();
-
+							CreateInstance();
 						}
-						else
-						{
-							//Debug.Log("[Singleton] Using instance already created: " + _instance.gameObject.name);
-						}
+
 					}
 					return _instance;
 				}
@@ -91,34 +53,26 @@ namespace LUT
 
 		private static bool applicationIsQuitting = false;
 
-		virtual public void Awake()
+		public virtual void Awake()
 		{
-			VerifyExistence();
+			CheckIfDuplicated();
 
 			applicationIsQuitting = false;
 
 			if (_instance == null)
 			{
-				_instance = this.GetComponent<T>();
+				_instance = GetComponent<T>();
 			}
 
-			if (_dontDestroyOnLoad)
+			if (_persistent)
 			{
-				DontDestroyOnLoad(this.gameObject);
+				DontDestroyOnLoad(gameObject);
 			}
 		}
 
-		public void OnEnable()
+		public virtual void Start()
 		{
-			//print("Enable " + this.name);
-			applicationIsQuitting = false;
-
-			VerifyExistence();
-		}
-
-		void Start()
-		{
-			VerifyExistence();
+			CheckIfDuplicated();
 		}
 
 
@@ -135,19 +89,26 @@ namespace LUT
 			applicationIsQuitting = true;
 		}
 
-		void VerifyExistence()
+		private void CheckIfDuplicated()
 		{
-			if (_instance != null && _instance != this)
+			if (_instance && _instance != this)
 			{
 				if (_destroyExistentObject)
 				{
-					Destroy(this.gameObject);
+					Destroy(gameObject);
 				}
 				else
 				{
 					Destroy(this);
 				}
 			}
+		}
+
+		private static void CreateInstance()
+		{
+			GameObject singleton = new GameObject(string.Format("(singleton)<{0}>", typeof(T)));
+
+			_instance = singleton.AddComponent<T>();
 		}
 	}
 }
