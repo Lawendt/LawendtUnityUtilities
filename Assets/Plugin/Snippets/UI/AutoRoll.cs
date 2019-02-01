@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace LUT.Snippets.UI
+namespace LUT.Snippets
 {
 
 	/// <summary>
@@ -9,119 +11,109 @@ namespace LUT.Snippets.UI
 	/// Developed by Lawendt. 
 	/// Available @ https://github.com/Lawendt/UnityLawUtilities
 	/// </summary>
-	public class AutoRoll : MonoBehaviour
+	public class AutoRoll : MonoBehaviour, IDragHandler
 	{
 		[Tooltip("Speed in unit/sec")]
-		public float horizontalSpeed;
+		public float horizontalSpeed = 0.05f;
 		[Tooltip("Speed in unit/sec")]
-		public float verticalSpeed;
+		public float verticalSpeed = 0.05f;
+
 		[AutoFind(typeof(ScrollRect), true)]
 		public ScrollRect scrollRect;
+
 		public bool active = true;
-		public bool autoDeactive;
-		public bool deactivedWithTouch;
-		public bool pong;
 
-		// Use this for initialization
-		void Start()
-		{
 
-		}
+		public bool deactivateWithDrag = true;
+		[ShowIf("deactivateWithDrag")]
+		public bool comeBackAfterDeactivateWithDrag = true;
+		[ShowIf("comeBackAfterDeactivateWithDrag")]
+		public float waitSeconds = 1;
 
-		private bool temp = false;
-		float lastHorizontal = -42, lastVertical = -42;
-		// Update is called once per frame
-		void Update()
+		public bool pong = false;
+
+		private void Update()
 		{
 			if (active)
 			{
-				if (deactivedWithTouch)
-				{
-					if (lastHorizontal != -42)
-					{
-						if (scrollRect.horizontalNormalizedPosition != lastHorizontal)
-						{
-							active = false;
-						}
-
-						if (scrollRect.verticalNormalizedPosition != lastVertical)
-						{
-							active = false;
-						}
-					}
-
-				}
 				scrollRect.horizontalNormalizedPosition -= horizontalSpeed * Time.deltaTime;
 				scrollRect.verticalNormalizedPosition -= verticalSpeed * Time.deltaTime;
 
-				lastHorizontal = scrollRect.horizontalNormalizedPosition;
-				lastVertical = scrollRect.verticalNormalizedPosition;
-
-				if (autoDeactive || pong)
+				if (HasEnded())
 				{
-					temp = false;
-					if (horizontalSpeed > 0)
+					if (pong)
 					{
-						if (scrollRect.horizontalNormalizedPosition <= 0)
-						{
-							temp = true;
-						}
-					}
-					else if (horizontalSpeed < 0)
-					{
-						if (scrollRect.horizontalNormalizedPosition >= 1)
-						{
-							temp = true;
-						}
+						horizontalSpeed *= -1;
+						verticalSpeed *= -1;
 					}
 					else
 					{
-						temp = true;
-					}
-
-					if (verticalSpeed > 0)
-					{
-						if (scrollRect.verticalNormalizedPosition < 0)
-						{
-							temp = true;
-						}
-						else
-						{
-							temp = false;
-						}
-					}
-					else if (verticalSpeed < 0)
-					{
-						if (scrollRect.verticalNormalizedPosition > 1)
-						{
-							temp = true;
-						}
-						else
-						{
-							temp = false;
-						}
-					}
-					else
-					{
-						temp = true;
-					}
-					if (temp)
-					{
-						if (autoDeactive)
-						{
-							active = false;
-						}
-
-						if (pong)
-						{
-							horizontalSpeed *= -1;
-							verticalSpeed *= -1;
-						}
+						Stop();
 					}
 				}
 
 			}
+		}
 
+
+		private bool HasEnded()
+		{
+			bool hasEnded;
+
+			if (scrollRect.horizontalNormalizedPosition <= 0 && Mathf.Sign(horizontalSpeed) == 1)
+			{
+				hasEnded = true;
+			}
+			else if (scrollRect.horizontalNormalizedPosition >= 1 && Mathf.Sign(horizontalSpeed) == -1)
+			{
+				hasEnded = true;
+			}
+			else
+			{
+				hasEnded = false;
+			}
+
+			if (scrollRect.verticalNormalizedPosition <= 0 && Mathf.Sign(verticalSpeed) == 1)
+			{
+				hasEnded &= true;
+			}
+			else if (scrollRect.verticalNormalizedPosition >= 1 && Mathf.Sign(verticalSpeed) == -1)
+			{
+				hasEnded &= true;
+			}
+			else
+			{
+				hasEnded &= false;
+			}
+			return hasEnded;
+		}
+
+		private void Stop()
+		{
+			active = false;
+		}
+
+		private void Play()
+		{
+			active = true;
+		}
+
+		public void OnDrag(PointerEventData eventData)
+		{
+			if (deactivateWithDrag)
+			{
+				Stop();
+				if (comeBackAfterDeactivateWithDrag)
+				{
+					StartCoroutine(WaitToActive());
+				}
+			}
+		}
+
+		private IEnumerator WaitToActive()
+		{
+			yield return new WaitForSecondsRealtime(waitSeconds);
+			Play();
 		}
 	}
 }
