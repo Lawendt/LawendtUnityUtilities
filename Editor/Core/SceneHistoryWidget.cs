@@ -50,7 +50,11 @@ namespace LUT
 		static SceneHistoryWidget()
 		{
 			EditorApplication.update += Update;
+#if UNITY_2019_1_OR_NEWER
+			SceneView.duringSceneGui += OnGUI;
+#else
 			SceneView.onSceneGUIDelegate += OnGUI;
+#endif
 
 			sceneHistory = new List<HistoryItem>(MAX_ITEMS);
 
@@ -283,6 +287,44 @@ namespace LUT
 			return "sceneHistory_" + PlayerSettings.productName + "_" + key;
 		}
 
+#if UNITY_2019_1_OR_NEWER
+		[SettingsProvider()]
+		private static SettingsProvider SceneHistory_Prefs()
+		{
+			return new SettingsProvider("SceneHistory", SettingsScope.User)
+			{
+				label = "Scene History",
+				guiHandler = (searchContext) =>
+				{
+					// This doesn't work with search
+					bool newShowOnRight = EditorGUILayout.Toggle("Show On Right", showOnRight);
+
+					if (showOnRight != newShowOnRight)
+					{
+						showOnRight = newShowOnRight;
+						EditorPrefs.SetBool(HistoryKey("showOnRight"), showOnRight);
+					}
+
+					if (GUILayout.Button("Clear History"))
+					{
+						for (int i = 0; i < MAX_ITEMS; i++)
+						{
+							EditorPrefs.DeleteKey(HistoryKey(i + "_path"));
+							EditorPrefs.DeleteKey(HistoryKey(i + "_name"));
+						}
+
+						while (sceneHistory.Count > 1)
+						{
+							sceneHistory.RemoveAt(1);
+						}
+
+						UpdateHistoryNames();
+					}
+				}
+
+			};
+		}
+#else
 		[PreferenceItem("SceneHistory")]
 		private static void SceneHistory_Prefs()
 		{
@@ -311,6 +353,7 @@ namespace LUT
 			}
 
 		}
+#endif
 
 		private struct HistoryItem
 		{
