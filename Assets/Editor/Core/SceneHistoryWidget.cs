@@ -291,7 +291,7 @@ namespace LUT
 		[SettingsProvider()]
 		private static SettingsProvider SceneHistory_Prefs()
 		{
-			return new SettingsProvider("SceneHistory", SettingsScope.User)
+			return new SettingsProvider("Preferences/LUT/SceneHistory", SettingsScope.User)
 			{
 				label = "Scene History",
 				guiHandler = (searchContext) =>
