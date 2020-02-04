@@ -170,7 +170,7 @@ public static class GameViewUtils
 
 			case BuildTarget.StandaloneOSX:
 			case BuildTarget.StandaloneWindows:
-			case BuildTarget.StandaloneLinux:
+			case BuildTarget.StandaloneLinux64:
 			case BuildTarget.StandaloneWindows64:
 				return GameViewSizeGroupType.Standalone;
 
