@@ -1,4 +1,4 @@
-# copied from bitstrap
+# copied from https://openupm.com/docs/adding-upm-package.html#package-yaml-file
 name: CI
 on:
   push:
